@@ -1,0 +1,1 @@
+<h2>Tour Detail</h2><?php if(!$tour){ echo '<p>Not found</p>'; } else { echo '<h3>'.htmlspecialchars($tour['tour_name']).'</h3><p>'.nl2br(htmlspecialchars($tour['description'])).'</p><p>Price: '.number_format($tour['price']).'</p>'; }

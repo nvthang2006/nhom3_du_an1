@@ -1,0 +1,1 @@
+<?php if(empty($records)) echo '<p>No records</p>'; else { echo '<h2>Checkin records</h2><table><tr><th>ID</th><th>Schedule</th><th>Checkin</th><th>Count</th></tr>'; foreach($records as $r){ echo '<tr><td>'.$r['checkin_id'].'</td><td>'.$r['schedule_id'].'</td><td>'.$r['checkin_time'].'</td><td>'.$r['checked_count'].'</td></tr>'; } echo '</table>'; }

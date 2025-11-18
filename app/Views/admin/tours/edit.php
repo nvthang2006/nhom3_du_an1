@@ -1,0 +1,5 @@
+<?php if (!$tour) {
+    echo '<p>Not found</p>';
+} else {
+    echo '<h2>Edit Tour</h2><form method="post" action="/index.php/admin/tours/update"><input type="hidden" name="id" value="' . $tour['tour_id'] . '"><div><label>Name <input name="tour_name" value="' . htmlspecialchars($tour['tour_name']) . '" required></label></div><div><label>Price <input name="price" type="number" value="' . $tour['price'] . '" required></label></div><div><label>Type <select name="tour_type"><option' . ($tour['tour_type'] == 'Trong nước' ? ' selected' : '') . '>Trong nước</option><option' . ($tour['tour_type'] == 'Quốc tế' ? ' selected' : '') . '>Quốc tế</option><option' . ($tour['tour_type'] == 'Theo yêu cầu' ? ' selected' : '') . '>Theo yêu cầu</option></select></label></div><div><label>Days <input name="duration_days" type="number" value="' . $tour['duration_days'] . '"></label></div><div><label>Policy <textarea name="policy">' . htmlspecialchars($tour['policy']) . '</textarea></label></div><div><button>Update</button></div></form>';
+}
