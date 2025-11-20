@@ -25,7 +25,7 @@ $pageActions = '<a href="<?= BASE_URL ?>?act=admin-tours-create" class="btn btn-
     <!-- Filter card -->
     <div class="card mb-3 shadow-sm">
         <div class="card-body">
-            <form class="row g-2 align-items-center" method="get" action="<?= ($base ?? '/index.php') ?>/admin/tours">
+            <form class="row g-2 align-items-center" method="get" action="<?= BASE_URL ?>?act=admin-tours">
                 <div class="col-md-4">
                     <input type="text" name="q" class="form-control" placeholder="Tìm theo tên, loại..." value="<?= htmlspecialchars($_GET['q'] ?? '') ?>">
                 </div>
@@ -43,10 +43,7 @@ $pageActions = '<a href="<?= BASE_URL ?>?act=admin-tours-create" class="btn btn-
                     <button class="btn btn-primary w-100 fw-semibold" type="submit">Tìm kiếm</button>
                 </div>
 
-                <div class="col-md-3 text-md-end">
-                    <a href="<?= ($base ?? '/index.php') ?>/admin/tours/export" class="btn btn-outline-secondary btn-sm">Export</a>
-                </div>
-            </form>
+                </form>
         </div>
     </div>
 
@@ -102,7 +99,7 @@ $pageActions = '<a href="<?= BASE_URL ?>?act=admin-tours-create" class="btn btn-
                                             <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="<?= $id ?>" data-name="<?= htmlspecialchars($t['tour_name'] ?? '', ENT_QUOTES) ?>">Xóa</button>
 
 
-                                            <a href="<?= BASE_URL ?>?act=admin-tours-view&id=<?= $id ?>" class="btn btn-outline-success">Xem</a>
+                                            <a href="<?= BASE_URL ?>?act=admin-tours-detail&id=<?= $id ?>" class="btn btn-outline-success">Xem</a>
 
                                         </div>
                                     </td>
@@ -132,7 +129,7 @@ $pageActions = '<a href="<?= BASE_URL ?>?act=admin-tours-create" class="btn btn-
 <!-- Delete confirmation modal (same markup but moved here for layout) -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <form id="deleteForm" method="post" action="<?= ($base ?? '/index.php') ?>/admin/tours/delete">
+        <form id="deleteForm" method="post" action="<?= BASE_URL ?>?act=admin-tours-delete">
             <input type="hidden" name="id" id="deleteTourId" value="">
             <div class="modal-content">
                 <div class="modal-header">
