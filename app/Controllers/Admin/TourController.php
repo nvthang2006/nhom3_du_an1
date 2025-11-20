@@ -24,7 +24,9 @@ class TourController extends AdminBaseController
             header('Location: /index.php/login');
             exit;
         }
-        $this->view('admin/tours/create');
+        $m = new Tour();
+        $tours = $m->all(); // lấy danh sách tour
+        $this->view('admin/tours/create', ['tours' => $tours]);
     }
     public function store()
     {
@@ -33,10 +35,29 @@ class TourController extends AdminBaseController
             exit;
         }
         $m = new Tour();
-        $data = ['tour_name' => $_POST['tour_name'], 'tour_type' => $_POST['tour_type'], 'description' => $_POST['description'], 'price' => $_POST['price'], 'duration_days' => $_POST['duration_days'], 'policy' => $_POST['policy'], 'created_by' => Auth::user()['user_id']];
+        $data = [
+            'tour_name'     => $_POST['tour_name'],
+            'tour_type'     => $_POST['tour_type'],
+            'description'   => $_POST['description'],
+            'price'         => $_POST['price'],
+            'duration_days' => $_POST['duration_days'],
+            'policy'        => $_POST['policy'],
+            'status'        => $_POST['status'],       // thêm dòng này
+            'created_by'    => Auth::user()['user_id']
+        ];
+
         $m->create($data);
-        $this->redirect('/index.php/admin/tours');
+        $this->redirect('?act=admin-tours');
     }
+
+    public function show()
+    {
+        $id = $_GET['id'] ?? 0;
+        $m = new Tour();
+        $tour = $m->find($id);
+        $this->view('admin/tours/detail', ['tour' => $tour]);
+    }
+
     public function edit()
     {
         if (!Auth::check() || !Auth::isRole('admin')) {
@@ -56,9 +77,18 @@ class TourController extends AdminBaseController
         }
         $id = $_POST['id'];
         $m = new Tour();
-        $data = ['tour_name' => $_POST['tour_name'], 'tour_type' => $_POST['tour_type'], 'description' => $_POST['description'], 'price' => $_POST['price'], 'duration_days' => $_POST['duration_days'], 'policy' => $_POST['policy']];
+        $data = [
+            'tour_name'     => $_POST['tour_name'],
+            'tour_type'     => $_POST['tour_type'],
+            'description'   => $_POST['description'],
+            'price'         => $_POST['price'],
+            'duration_days' => $_POST['duration_days'],
+            'policy'        => $_POST['policy'],
+            'status'        => $_POST['status'],
+        ];
+
         $m->update($id, $data);
-        $this->redirect('/index.php/admin/tours');
+        $this->redirect('?act=admin-tours');
     }
     public function delete()
     {
@@ -69,6 +99,6 @@ class TourController extends AdminBaseController
         $id = $_POST['id'];
         $m = new Tour();
         $m->delete($id);
-        $this->redirect('/index.php/admin/tours');
+        $this->redirect('?act=admin-tours');
     }
 }

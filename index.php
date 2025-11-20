@@ -49,6 +49,7 @@ match ($act) {
     'admin-tours-edit' => (new App\Controllers\Admin\TourController())->edit(), // ?id=
     'admin-tours-update' => (new App\Controllers\Admin\TourController())->update(),
     'admin-tours-delete' => (new App\Controllers\Admin\TourController())->delete(),
+    'admin-tours-detail' => (new App\Controllers\Admin\TourController())->show(),
     'admin-bookings' => (new App\Controllers\Admin\BookingController())->index(),
     'admin-bookings-store' => (new App\Controllers\Admin\BookingController())->store(),
 

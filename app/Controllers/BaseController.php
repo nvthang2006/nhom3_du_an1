@@ -16,6 +16,7 @@ class BaseController
     }
     protected function redirect($url)
     {
+        $url = BASE_URL . $url;
         header('Location: ' . $url);
         exit;
     }
