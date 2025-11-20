@@ -2,10 +2,9 @@
 
 namespace App\Controllers\Admin;
 
-require_once __DIR__ . '/AdminBaseController.php';
-
-use App\Controllers\BaseController;
 use App\Core\Auth;
+use App\Models\Tour; // Nhớ use Model Tour
+
 class DashboardController extends AdminBaseController
 {
     public function __construct()
@@ -15,6 +14,20 @@ class DashboardController extends AdminBaseController
 
     public function index()
     {
-        $this->view('admin/dashboard');
+        // 1. Khởi tạo Model
+        $tourModel = new Tour();
+
+        // 2. Lấy dữ liệu thống kê
+        $stats = [
+            'tours_count' => $tourModel->countAll(),
+            // Bạn có thể thêm các chỉ số khác ở đây (ví dụ: số booking, doanh thu...)
+            'today_bookings' => 0,
+            'month_revenue' => 0
+        ];
+
+        // 3. Truyền dữ liệu sang View
+        $this->view('admin/dashboard', [
+            'stats' => $stats
+        ]);
     }
 }

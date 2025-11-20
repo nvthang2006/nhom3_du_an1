@@ -50,4 +50,11 @@ class Tour extends BaseModel
         $this->execute("DELETE FROM {$this->table} WHERE tour_id=:id", ['id' => $id]);
         return true;
     }
+
+    public function countAll()
+    {
+        // Sử dụng hàm fetch() của BaseModel để lấy 1 dòng kết quả
+        $result = $this->fetch("SELECT COUNT(*) as total FROM {$this->table}");
+        return $result['total'] ?? 0;
+    }
 }
