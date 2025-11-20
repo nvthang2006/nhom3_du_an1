@@ -2,8 +2,6 @@
 
 namespace App\Controllers\Admin;
 
-require_once __DIR__ . '/../BaseController.php';
-
 use App\Controllers\BaseController;
 
 class AdminBaseController extends BaseController
