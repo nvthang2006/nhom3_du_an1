@@ -1,113 +1,107 @@
-    <div class="row g-4">
-
-        <!-- LEFT: form -->
-        <div class="col-12 col-lg-7">
-            <div class="card p-4">
-                <h4 class="mb-4">Tạo Tour mới</h4>
-
-                <form method="post" action="<?= BASE_URL ?>?act=admin-tours-store">
-
-                    <div class="mb-3">
-                        <label class="form-label">Tên tour</label>
-                        <input name="tour_name" required class="form-control" placeholder="Nhập tên tour">
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Loại tour</label>
-                        <select name="tour_type" class="form-select">
-                            <option>Trong nước</option>
-                            <option>Quốc tế</option>
-                            <option>Theo yêu cầu</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Mô tả</label>
-                        <textarea name="description" class="form-control" rows="3" placeholder="Nhập mô tả tour"></textarea>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Giá</label>
-                        <input name="price" type="number" required class="form-control" placeholder="Nhập giá">
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Số ngày</label>
-                        <input name="duration_days" type="number" value="1" class="form-control">
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Chính sách</label>
-                        <textarea name="policy" class="form-control" rows="4" placeholder="Thêm chính sách tour..."></textarea>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Trạng thái</label>
-                        <select name="status" class="form-select">
-                            <option>Hoạt động</option>
-                            <option>Tạm dừng</option>
-                            <option>Ngừng bán</option>
-                        </select>
-                    </div>
-
-                    <!-- created_by -->
-                    <input type="hidden" name="created_by" value="<?= $_SESSION['user_id'] ?? 1 ?>">
-
-                    <button class="btn btn-primary px-4">Tạo Tour</button>
-                </form>
-
-            </div>
+<?php
+// app/Views/admin/tours/create.php
+?>
+<div class="container-fluid p-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1 text-gray-800">Tạo Tour Mới</h1>
+            <p class="text-muted mb-0 small">Điền thông tin để thêm tour du lịch mới vào hệ thống</p>
         </div>
+        <a href="<?= BASE_URL ?>?act=admin-tours" class="btn btn-outline-secondary shadow-sm">
+            <i class="bi bi-arrow-left me-1"></i> Quay lại danh sách
+        </a>
+    </div>
 
-        <!-- RIGHT: existing tours -->
-        <div class="col-12 col-lg-5">
-            <div class="card p-3">
-                <div class="d-flex align-items-center justify-content-between mb-3">
-                    <h5 class="mb-0">Danh sách Tour</h5>
-                    <small class="small-muted"><?= isset($tours) ? count($tours) : 0 ?> items</small>
-                </div>
+    <form method="post" action="<?= BASE_URL ?>?act=admin-tours-store" class="needs-validation">
+        <input type="hidden" name="created_by" value="<?= $_SESSION['user_id'] ?? 1 ?>">
 
-                <?php if (empty($tours)): ?>
-                    <div class="text-muted">Chưa có tour nào. Tạo tour mới để hiển thị ở đây.</div>
-                <?php else: ?>
-                    <div class="list-group list-group-flush">
-                        <?php foreach ($tours as $t): ?>
-                            <div class="list-group-item d-flex align-items-start gap-3">
-                                <!-- thumbnail / icon -->
-                                <div style="width:64px;height:48px;border-radius:8px;background:#f1f5f9;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:600;color:#0f172a;">
-                                    <?= htmlspecialchars(substr($t['tour_name'] ?? 'T', 0, 1)) ?>
-                                </div>
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white py-3">
+                        <h6 class="m-0 font-weight-bold text-primary"><i class="bi bi-info-circle me-2"></i>Thông tin cơ bản</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Tên Tour <span class="text-danger">*</span></label>
+                            <input type="text" name="tour_name" required class="form-control form-control-lg" placeholder="Ví dụ: Tour Hà Nội - Sapa 3 ngày 2 đêm">
+                        </div>
 
-                                <div class="flex-grow-1">
-                                    <div class="d-flex align-items-center justify-content-between">
-                                        <div>
-                                            <div class="fw-semibold"><?= htmlspecialchars($t['tour_name'] ?? '—') ?></div>
-                                            <div class="small-muted"><?= htmlspecialchars($t['tour_type'] ?? '—') ?> · <?= (int)($t['duration_days'] ?? 1) ?> ngày</div>
-                                        </div>
-                                        <div class="text-end">
-                                            <div class="fw-semibold"><?= isset($t['price']) ? number_format($t['price'], 0, ',', '.') . '₫' : '—' ?></div>
-                                            <div class="small-muted"><?= htmlspecialchars($t['status'] ?? '') ?></div>
-                                        </div>
-                                    </div>
-
-                                    <div class="mt-2 d-flex gap-2">
-                                        <a href="<?= $base ?>/admin/tours/edit?id=<?= urlencode($t['id'] ?? '') ?>" class="btn btn-sm btn-outline-primary">Sửa</a>
-                                        <form method="post" action="<?= $base ?>/admin/tours/delete" onsubmit="return confirm('Xác nhận xoá tour này?')" style="display:inline">
-                                            <input type="hidden" name="id" value="<?= htmlspecialchars($t['id'] ?? '') ?>">
-                                            <button type="submit" class="btn btn-sm btn-outline-danger">Xoá</button>
-                                        </form>
-                                    </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Mã/Loại Tour</label>
+                                <select name="tour_type" class="form-select">
+                                    <option value="Trong nước">Trong nước</option>
+                                    <option value="Quốc tế">Quốc tế</option>
+                                    <option value="Theo yêu cầu">Theo yêu cầu</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Thời lượng (Ngày) <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light"><i class="bi bi-clock"></i></span>
+                                    <input type="number" name="duration_days" min="1" value="1" class="form-control">
                                 </div>
                             </div>
-                        <?php endforeach; ?>
-                    </div>
-                <?php endif; ?>
+                        </div>
 
-                <!-- optional: link to full list -->
-                <div class="mt-3 text-end">
-                    <a href="<?= BASE_URL ?>?act=admin-tours" class="btn btn-sm btn-link">Xem tất cả</a>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Mô tả chi tiết</label>
+                            <textarea name="description" class="form-control" rows="5" placeholder="Nhập mô tả hấp dẫn về tour..."></textarea>
+                            <div class="form-text">Mô tả ngắn gọn các điểm nổi bật của tour.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white py-3">
+                        <h6 class="m-0 font-weight-bold text-primary"><i class="bi bi-file-earmark-text me-2"></i>Chính sách & Điều khoản</h6>
+                    </div>
+                    <div class="card-body">
+                        <textarea name="policy" class="form-control" rows="4" placeholder="Nhập chính sách hủy tour, bao gồm, không bao gồm..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white py-3">
+                        <h6 class="m-0 font-weight-bold text-primary"><i class="bi bi-tag me-2"></i>Định giá</h6>
+                    </div>
+                    <div class="card-body">
+                        <label class="form-label fw-bold">Giá niêm yết (VNĐ) <span class="text-danger">*</span></label>
+                        <div class="input-group mb-3">
+                            <input type="number" name="price" required class="form-control form-control-lg fw-bold text-primary" placeholder="0">
+                            <span class="input-group-text">₫</span>
+                        </div>
+                        <div class="alert alert-light border small text-muted">
+                            <i class="bi bi-lightbulb me-1"></i> Giá này sẽ được hiển thị công khai trên trang chủ.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white py-3">
+                        <h6 class="m-0 font-weight-bold text-primary"><i class="bi bi-gear me-2"></i>Thiết lập</h6>
+                    </div>
+                    <div class="card-body">
+                        <label class="form-label fw-bold">Trạng thái hiển thị</label>
+                        <select name="status" class="form-select mb-3">
+                            <option value="Hoạt động" selected>🟢 Đang hoạt động</option>
+                            <option value="Ngừng">🔴 Ngừng hoạt động</option>
+                        </select>
+
+                        <hr>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-save me-2"></i>Lưu Tour Mới
+                            </button>
+                            <button type="reset" class="btn btn-light">Làm lại</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-
-    </div>
+    </form>
+</div>

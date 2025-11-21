@@ -4,14 +4,14 @@
 ?>
 
 <div class="container-fluid p-4">
-    
+
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h1 class="h3 mb-1 text-gray-800">Quản lý Tour</h1>
             <p class="text-muted mb-0 small">Danh sách và quản lý các tour du lịch</p>
         </div>
         <a href="<?= BASE_URL ?>?act=admin-tours-create" class="btn btn-primary shadow-sm">
-            <i class="bi bi-plus-lg me-1"></i> Tạo tour mới
+            <i class="bi bi-plus-circle me-1"></i> Tạo Tour mới
         </a>
     </div>
 
@@ -32,9 +32,9 @@
                         <span class="input-group-text bg-light border-end-0">
                             <i class="bi bi-search text-muted"></i>
                         </span>
-                        <input type="text" name="q" class="form-control border-start-0 ps-0 bg-light" 
-                               placeholder="Tìm theo tên tour..." 
-                               value="<?= htmlspecialchars($_GET['q'] ?? '') ?>">
+                        <input type="text" name="q" class="form-control border-start-0 ps-0 bg-light"
+                            placeholder="Tìm theo tên tour..."
+                            value="<?= htmlspecialchars($_GET['q'] ?? '') ?>">
                     </div>
                 </div>
 
@@ -98,13 +98,13 @@
                                     <td class="ps-4 text-muted fw-bold">#<?= $id ?></td>
                                     <td>
                                         <div class="d-flex align-items-center">
-                                            <div class="rounded bg-primary-subtle d-flex align-items-center justify-content-center text-primary me-3" 
-                                                 style="width: 40px; height: 40px; font-size: 1.2rem;">
+                                            <div class="rounded bg-primary-subtle d-flex align-items-center justify-content-center text-primary me-3"
+                                                style="width: 40px; height: 40px; font-size: 1.2rem;">
                                                 <i class="bi bi-map"></i>
                                             </div>
                                             <div>
                                                 <div class="fw-bold text-dark mb-1"><?= $name ?></div>
-                                                <?php if($desc): ?>
+                                                <?php if ($desc): ?>
                                                     <div class="text-muted small text-truncate" style="max-width: 250px;" title="<?= htmlspecialchars($t['description'] ?? '') ?>">
                                                         <?= $desc ?>...
                                                     </div>
@@ -138,25 +138,25 @@
                                     </td>
                                     <td class="text-end pe-4">
                                         <div class="btn-group">
-                                            <a href="<?= BASE_URL ?>?act=admin-tours-detail&id=<?= $id ?>" 
-                                               class="btn btn-sm btn-light text-primary" 
-                                               title="Xem chi tiết" data-bs-toggle="tooltip">
+                                            <a href="<?= BASE_URL ?>?act=admin-tours-detail&id=<?= $id ?>"
+                                                class="btn btn-sm btn-light text-primary"
+                                                title="Xem chi tiết" data-bs-toggle="tooltip">
                                                 <i class="bi bi-eye"></i>
                                             </a>
-                                            
-                                            <a href="<?= BASE_URL ?>?act=admin-tours-edit&id=<?= $id ?>" 
-                                               class="btn btn-sm btn-light text-warning" 
-                                               title="Chỉnh sửa" data-bs-toggle="tooltip">
+
+                                            <a href="<?= BASE_URL ?>?act=admin-tours-edit&id=<?= $id ?>"
+                                                class="btn btn-sm btn-light text-warning"
+                                                title="Chỉnh sửa" data-bs-toggle="tooltip">
                                                 <i class="bi bi-pencil-square"></i>
                                             </a>
-                                            
-                                            <button type="button" 
-                                                    class="btn btn-sm btn-light text-danger" 
-                                                    data-bs-toggle="modal" 
-                                                    data-bs-target="#deleteModal" 
-                                                    data-id="<?= $id ?>" 
-                                                    data-name="<?= htmlspecialchars($name, ENT_QUOTES) ?>"
-                                                    title="Xóa" data-bs-toggle="tooltip">
+
+                                            <button type="button"
+                                                class="btn btn-sm btn-light text-danger"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#deleteModal"
+                                                data-id="<?= $id ?>"
+                                                data-name="<?= htmlspecialchars($name, ENT_QUOTES) ?>"
+                                                title="Xóa" data-bs-toggle="tooltip">
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </div>
@@ -170,17 +170,17 @@
         </div>
 
         <?php if (!empty($tours) && count($tours) > 10): ?>
-        <div class="card-footer bg-white border-0 py-3 d-flex justify-content-between align-items-center">
-            <div class="small text-muted">Hiển thị <?= count($tours) ?> kết quả</div>
-            <nav>
-                <ul class="pagination pagination-sm mb-0">
-                    <li class="page-item disabled"><a class="page-link" href="#">Trước</a></li>
-                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">Sau</a></li>
-                </ul>
-            </nav>
-        </div>
+            <div class="card-footer bg-white border-0 py-3 d-flex justify-content-between align-items-center">
+                <div class="small text-muted">Hiển thị <?= count($tours) ?> kết quả</div>
+                <nav>
+                    <ul class="pagination pagination-sm mb-0">
+                        <li class="page-item disabled"><a class="page-link" href="#">Trước</a></li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">Sau</a></li>
+                    </ul>
+                </nav>
+            </div>
         <?php endif; ?>
     </div>
 </div>
@@ -189,7 +189,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <form id="deleteForm" method="post" action="<?= BASE_URL ?>?act=admin-tours-delete">
             <input type="hidden" name="id" id="deleteTourId" value="">
-            
+
             <div class="modal-content border-0 shadow-lg">
                 <div class="modal-header border-0 pb-0">
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -203,7 +203,7 @@
                         Bạn có chắc chắn muốn xóa tour <strong id="deleteTourName" class="text-dark"></strong>?<br>
                         Hành động này không thể hoàn tác.
                     </p>
-                    
+
                     <div class="alert alert-warning d-inline-block text-start p-2 small mb-3">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" value="1" id="deleteWithBookings" name="force">
@@ -227,7 +227,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         // 1. Kích hoạt Tooltips (nếu dùng Bootstrap 5)
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl)
         });
 
@@ -238,10 +238,10 @@
                 var button = event.relatedTarget;
                 var id = button.getAttribute('data-id');
                 var name = button.getAttribute('data-name');
-                
+
                 document.getElementById('deleteTourId').value = id;
                 document.getElementById('deleteTourName').textContent = name;
-                
+
                 // Reset checkbox
                 document.getElementById('deleteWithBookings').checked = false;
             });
