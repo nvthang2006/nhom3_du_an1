@@ -1,6 +1,4 @@
 <?php
-// app/Views/admin/bookings/index.php
-// Variables expected: $bookings (array), optional $flash (string)
 ?>
 
 <div class="container-fluid p-4">
@@ -14,7 +12,6 @@
             <i class="bi bi-plus-circle me-1"></i> Tạo Booking mới
         </a>
     </div>
-
     <?php if (!empty($flash) || !empty($_SESSION['flash'])): ?>
         <div class="alert alert-success alert-dismissible fade show shadow-sm border-0 border-start border-success border-4" role="alert">
             <i class="bi bi-check-circle-fill me-2"></i>

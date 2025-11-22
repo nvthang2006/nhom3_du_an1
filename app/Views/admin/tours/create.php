@@ -12,7 +12,7 @@
         </a>
     </div>
 
-    <form method="post" action="<?= BASE_URL ?>?act=admin-tours-store" class="needs-validation">
+    <form method="post" action="<?= BASE_URL ?>?act=admin-tours-store" class="needs-validation" enctype="multipart/form-data">
         <input type="hidden" name="created_by" value="<?= $_SESSION['user_id'] ?? 1 ?>">
 
         <div class="row g-4">
@@ -53,12 +53,28 @@
                     </div>
                 </div>
 
-                <div class="card border-0 shadow-sm">
+                <div class="card border-0 shadow-sm mb-4">
                     <div class="card-header bg-white py-3">
                         <h6 class="m-0 font-weight-bold text-primary"><i class="bi bi-file-earmark-text me-2"></i>Chính sách & Điều khoản</h6>
                     </div>
                     <div class="card-body">
                         <textarea name="policy" class="form-control" rows="4" placeholder="Nhập chính sách hủy tour, bao gồm, không bao gồm..."></textarea>
+                    </div>
+                </div>
+
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                        <h6 class="m-0 font-weight-bold text-primary"><i class="bi bi-list-check me-2"></i>Lịch trình Tour (Tour Schedule)</h6>
+                        <button type="button" class="btn btn-sm btn-success" onclick="addScheduleRow()">
+                            <i class="bi bi-plus-circle"></i> Thêm ngày
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div id="schedule-container">
+                            </div>
+                        <div class="text-center mt-3 text-muted small" id="empty-msg">
+                            Chưa có lịch trình nào. Bấm "Thêm ngày" để bắt đầu.
+                        </div>
                     </div>
                 </div>
             </div>
@@ -105,3 +121,60 @@
         </div>
     </form>
 </div>
+
+<script>
+    let scheduleCount = 0;
+
+    function addScheduleRow() {
+        scheduleCount++;
+        // Ẩn thông báo trống
+        const emptyMsg = document.getElementById('empty-msg');
+        if (emptyMsg) emptyMsg.style.display = 'none';
+
+        const container = document.getElementById('schedule-container');
+        const html = `
+            <div class="card mb-3 border shadow-none schedule-item" id="schedule-row-${scheduleCount}">
+                <div class="card-body p-3 bg-light rounded">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="fw-bold text-primary">Ngày ${scheduleCount}</span>
+                        <button type="button" class="btn btn-sm btn-outline-danger border-0" onclick="removeScheduleRow(this)">
+                            <i class="bi bi-x-lg"></i> Xóa
+                        </button>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-2">
+                            <label class="form-label small fw-bold">Ngày thứ</label>
+                            <input type="number" name="schedules[${scheduleCount}][day_number]" class="form-control" value="${scheduleCount}" required>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <label class="form-label small fw-bold">Địa điểm</label>
+                            <input type="text" name="schedules[${scheduleCount}][location]" class="form-control" placeholder="VD: Vịnh Hạ Long" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Hình ảnh (Tùy chọn)</label>
+                            <input type="file" name="schedules_image_${scheduleCount}" class="form-control" accept="image/*">
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label small fw-bold">Mô tả hoạt động</label>
+                            <textarea name="schedules[${scheduleCount}][description]" class="form-control" rows="2" placeholder="Mô tả chi tiết hoạt động trong ngày..."></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        container.insertAdjacentHTML('beforeend', html);
+    }
+
+    function removeScheduleRow(btn) {
+        btn.closest('.schedule-item').remove();
+        // Kiểm tra nếu không còn dòng nào thì hiện lại thông báo
+        const container = document.getElementById('schedule-container');
+        if (container.children.length === 0) {
+            document.getElementById('empty-msg').style.display = 'block';
+            scheduleCount = 0; // Reset đếm nếu muốn hoặc giữ nguyên để tránh trùng ID
+        }
+    }
+</script>

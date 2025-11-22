@@ -268,7 +268,7 @@ if (class_exists('\App\Core\Auth')) {
         <hr style="border-color: rgba(255,255,255,0.04)">
 
         <a href="<?= $base ?>/admin/settings"><i class="bi bi-gear"></i> <span class="d-none d-md-inline">Cấu hình</span></a>
-        <a href="<?= $base ?>/index.php/logout"><i class="bi bi-box-arrow-right"></i> <span class="d-none d-md-inline">Đăng xuất</span></a>
+        <a href="<?= BASE_URL ?>?act=logout"><i class="bi bi-box-arrow-right"></i> <span class="d-none d-md-inline">Đăng xuất</span></a>
       </nav>
 
       <div class="mt-auto d-none d-md-block small-muted px-2" style="margin-top:18px;">

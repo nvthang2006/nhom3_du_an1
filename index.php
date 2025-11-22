@@ -22,6 +22,7 @@ require_once './app/Models/BaseModel.php';
 require_once './app/Models/CheckinRecord.php';
 require_once './app/Models/Tour.php';
 require_once './app/Models/User.php';
+require_once './app/Models/TourSchedule.php';
 
 // Lấy act từ query string
 $act = $_GET['act'] ?? '/';
