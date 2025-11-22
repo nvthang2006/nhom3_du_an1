@@ -85,12 +85,12 @@ class AuthController extends BaseController
         ]);
 
         $_SESSION['success'] = 'Đăng ký thành công, hãy đăng nhập.';
-        return $this->redirect('/DA1/index.php/login');
+        return header('Location: ' . BASE_URL . '?act=login');
     }
 
     public function logout()
     {
         Auth::logout();
-        return $this->redirect('/DA1/index.php/login');
+        return header('Location: ' . BASE_URL . '?act=login');
     }
 }
