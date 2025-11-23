@@ -17,30 +17,31 @@ class Tour extends BaseModel
     }
     public function create($d)
     {
+        // Thêm max_people vào câu lệnh INSERT
         $sql = "INSERT INTO {$this->table} 
-        (tour_name, tour_type, description, price, duration_days, policy, status, created_by)
+        (tour_name, tour_type, description, price, duration_days, max_people, policy, status, created_by)
         VALUES 
-        (:tour_name, :tour_type, :description, :price, :duration_days, :policy, :status, :created_by)";
+        (:tour_name, :tour_type, :description, :price, :duration_days, :max_people, :policy, :status, :created_by)";
 
         $this->execute($sql, $d);
         return $this->db->lastInsertId();
     }
 
-
     public function update($id, $d)
     {
+        // Thêm max_people vào câu lệnh UPDATE
         $sql = "UPDATE {$this->table} SET 
                 tour_name = :tour_name,
                 tour_type = :tour_type,
                 description = :description,
                 price = :price,
                 duration_days = :duration_days,
+                max_people = :max_people, 
                 policy = :policy,
                 status = :status
             WHERE tour_id = :id";
 
         $d['id'] = $id;
-
         $this->execute($sql, $d);
         return true;
     }

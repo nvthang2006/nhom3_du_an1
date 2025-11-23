@@ -43,6 +43,7 @@
                                     <input type="number" name="duration_days" min="1" value="1" class="form-control">
                                 </div>
                             </div>
+
                         </div>
 
                         <div class="mb-3">
@@ -71,7 +72,7 @@
                     </div>
                     <div class="card-body">
                         <div id="schedule-container">
-                            </div>
+                        </div>
                         <div class="text-center mt-3 text-muted small" id="empty-msg">
                             Chưa có lịch trình nào. Bấm "Thêm ngày" để bắt đầu.
                         </div>
@@ -106,7 +107,13 @@
                             <option value="Hoạt động" selected>🟢 Đang hoạt động</option>
                             <option value="Ngừng">🔴 Ngừng hoạt động</option>
                         </select>
-
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label fw-bold">Số khách tối đa</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="bi bi-people"></i></span>
+                                <input type="number" name="max_people" min="1" value="20" class="form-control">
+                            </div>
+                        </div>
                         <hr>
 
                         <div class="d-grid gap-2">
@@ -120,6 +127,7 @@
             </div>
         </div>
     </form>
+
 </div>
 
 <script>
