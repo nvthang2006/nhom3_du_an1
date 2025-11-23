@@ -117,7 +117,7 @@
                                 <?php endforeach; ?>
                             <?php endif; ?>
                         </div>
-                        
+
                         <div class="text-center mt-3 text-muted small" id="empty-msg" style="<?= !empty($schedules) ? 'display:none' : '' ?>">
                             Chưa có lịch trình nào. Bấm "Thêm ngày" để bắt đầu.
                         </div>
@@ -149,7 +149,13 @@
                             <option value="Hoạt động" <?= ($tour['status'] === 'Hoạt động') ? 'selected' : '' ?>>🟢 Đang hoạt động</option>
                             <option value="Ngừng" <?= ($tour['status'] === 'Ngừng') ? 'selected' : '' ?>>🔴 Ngừng hoạt động</option>
                         </select>
-
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label fw-bold">Số khách tối đa</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="bi bi-people"></i></span>
+                                <input type="number" name="max_people" min="1" value="<?= $tour['max_people'] ?? 20 ?>" class="form-control">
+                            </div>
+                        </div>
                         <hr>
 
                         <div class="d-grid gap-2">
@@ -170,7 +176,7 @@
     let scheduleCount = <?= !empty($schedules) ? count($schedules) : 0 ?>;
 
     function addScheduleRow() {
-        const currentIndex = scheduleCount++; 
+        const currentIndex = scheduleCount++;
 
         document.getElementById('empty-msg').style.display = 'none';
         const container = document.getElementById('schedule-container');

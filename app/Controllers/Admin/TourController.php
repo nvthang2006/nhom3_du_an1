@@ -45,6 +45,7 @@ class TourController extends AdminBaseController
             'description'   => $_POST['description'],
             'price'         => $_POST['price'],
             'duration_days' => $_POST['duration_days'],
+            'max_people'    => $_POST['max_people'] ?? 20,
             'policy'        => $_POST['policy'],
             'status'        => $_POST['status'],
             'created_by'    => Auth::user()['user_id']
@@ -130,8 +131,6 @@ class TourController extends AdminBaseController
         ]);
     }
 
-    // --- SỬA HÀM UPDATE ---
-    // --- SỬA HÀM UPDATE ---
     public function update()
     {
         // 1. Kiểm tra quyền hạn
@@ -150,6 +149,7 @@ class TourController extends AdminBaseController
             'description'   => $_POST['description'],
             'price'         => $_POST['price'],
             'duration_days' => $_POST['duration_days'],
+            'max_people'    => $_POST['max_people'] ?? 20,  
             'policy'        => $_POST['policy'],
             'status'        => $_POST['status'],
         ];
