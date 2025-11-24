@@ -260,7 +260,6 @@ if (class_exists('\App\Core\Auth')) {
       <nav class="side-nav" aria-label="Main admin menu">
         <a href="<?= BASE_URL ?>?act=admin-dashboard" class="<?= ($_SERVER['REQUEST_URI'] ?? '') === ($base . '/admin') ? 'active' : '' ?>"><i class="bi bi-speedometer2"></i> <span class="d-none d-md-inline">Dashboard</span></a>
         <a href="<?= BASE_URL ?>?act=admin-tours" class="<?= (strpos($_SERVER['REQUEST_URI'], '/admin/tours') !== false) ? 'active' : '' ?>"><i class="bi bi-geo-alt"></i> <span class="d-none d-md-inline">Quản lý Tour</span></a>
-        <!-- <a href="<?= BASE_URL ?>?act=admin-tours" class="<?= (strpos($_SERVER['REQUEST_URI'], '/admin/tours') !== false) ? 'active' : '' ?>"><i class="bi bi-person-circle"></i> <span class="d-none d-md-inline">Người dùng</span></a> -->
         <a href="<?= BASE_URL ?>?act=admin-bookings" class="<?= (strpos($_SERVER['REQUEST_URI'], '/admin/bookings') !== false) ? 'active' : '' ?>"><i class="bi bi-journal-check"></i> <span class="d-none d-md-inline">Đặt chỗ</span></a>
         <a href="<?= $base ?>/admin/guides" class="<?= (strpos($_SERVER['REQUEST_URI'], '/admin/guides') !== false) ? 'active' : '' ?>"><i class="bi bi-people"></i> <span class="d-none d-md-inline">Hướng dẫn viên</span></a>
         <a href="<?= $base ?>/admin/reports" class="<?= (strpos($_SERVER['REQUEST_URI'], '/admin/reports') !== false) ? 'active' : '' ?>"><i class="bi bi-bar-chart"></i> <span class="d-none d-md-inline">Báo cáo</span></a>

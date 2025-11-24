@@ -58,4 +58,12 @@ class Tour extends BaseModel
         $result = $this->fetch("SELECT COUNT(*) as total FROM {$this->table}");
         return $result['total'] ?? 0;
     }
+
+    public function getBookedSlots($tourId)
+    {
+        // Chỉ tính các đơn chưa hủy
+        $sql = "SELECT SUM(total_people) as total FROM bookings WHERE tour_id = :id AND status != 'Hủy'";
+        $result = $this->fetch($sql, ['id' => $tourId]);
+        return (int)($result['total'] ?? 0);
+    }
 }
