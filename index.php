@@ -29,11 +29,7 @@ $act = $_GET['act'] ?? '/';
 
 // Định tuyến bằng match
 match ($act) {
-    // Public
-    // Khi nhập '/', tự chuyển đến login
     '/' => header("Location: ?act=login"),
-    // 'tours' => (new App\Controllers\HomeController())->tours(),
-    // 'tours-show' => (new App\Controllers\HomeController())->show(), // ?id=
 
     // Auth
     'login' => (new App\Controllers\AuthController())->showLogin(),
@@ -53,7 +49,8 @@ match ($act) {
     'admin-tours-detail' => (new App\Controllers\Admin\TourController())->show(),
     'admin-bookings' => (new App\Controllers\Admin\BookingController())->index(),
     'admin-bookings-create' => (new App\Controllers\Admin\BookingController())->create(),
-    'admin-bookings-store'  => (new App\Controllers\Admin\BookingController())->store(),
+    'admin-bookings-store' => (new App\Controllers\Admin\BookingController())->store(),
+    'admin-bookings-prepare' => (new App\Controllers\Admin\BookingController())->prepare(),
 
     // HDV
     'hdv-dashboard' => (new App\Controllers\Hdv\DashboardController())->index(),

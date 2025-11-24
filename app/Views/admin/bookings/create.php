@@ -1,136 +1,190 @@
 <div class="container-fluid p-4">
+
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h1 class="h3 mb-1 text-gray-800">Tạo Booking Mới</h1>
-            <p class="text-muted mb-0 small">Tạo đơn đặt tour thủ công cho khách hàng</p>
+            <h1 class="h3 mb-1 text-gray-800">
+                <?= ($step == 1) ? 'Đặt Tour Mới (Bước 1)' : 'Nhập Danh Sách Đoàn (Bước 2)' ?>
+            </h1>
+            <p class="text-muted mb-0 small">Hỗ trợ đặt tour cho khách lẻ và khách đoàn</p>
         </div>
-        <a href="<?= BASE_URL ?>?act=admin-bookings" class="btn btn-outline-secondary shadow-sm">
-            <i class="bi bi-arrow-left me-1"></i> Quay lại danh sách
+        <a href="<?= BASE_URL ?>?act=admin-bookings" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left"></i> Hủy bỏ
         </a>
     </div>
 
-    <form method="post" action="<?= BASE_URL ?>?act=admin-bookings-store" id="bookingForm">
-        <div class="row g-4">
+    <?php if (!empty($_SESSION['error'])): ?>
+        <div class="alert alert-danger shadow-sm">
+            <i class="bi bi-exclamation-circle-fill me-2"></i> <?= $_SESSION['error'];
+                                                                unset($_SESSION['error']); ?>
+        </div>
+    <?php endif; ?>
 
-            <div class="col-lg-7">
-                <div class="card border-0 shadow-sm mb-4">
-                    <div class="card-header bg-white py-3">
-                        <h6 class="m-0 font-weight-bold text-primary"><i class="bi bi-map me-2"></i>Thông tin Tour</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-3">
+    <?php if ($step == 1): ?>
+        <form method="post" action="<?= BASE_URL ?>?act=admin-bookings-prepare">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h6 class="m-0 fw-bold text-primary"><i class="bi bi-gear me-2"></i>Thiết lập Booking</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
                             <label class="form-label fw-bold">Chọn Tour <span class="text-danger">*</span></label>
-                            <select name="tour_id" id="tourSelect" class="form-select form-select-lg" required>
-                                <option value="" data-price="0">-- Chọn Tour du lịch --</option>
+                            <select name="tour_id" class="form-select form-select-lg" required>
+                                <option value="">-- Chọn tour du lịch --</option>
                                 <?php foreach ($tours as $t): ?>
-                                    <option value="<?= $t['tour_id'] ?>" data-price="<?= $t['price'] ?>">
-                                        <?= htmlspecialchars($t['tour_name']) ?> - Giá: <?= number_format($t['price']) ?>₫
+                                    <option value="<?= $t['tour_id'] ?>">
+                                        <?= htmlspecialchars($t['tour_name']) ?>
+                                        (Giá: <?= number_format($t['price']) ?>₫ - Max: <?= $t['max_people'] ?>)
                                     </option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Ngày khởi hành <span class="text-danger">*</span></label>
-                                <input type="date" name="start_date" required class="form-control" value="<?= date('Y-m-d', strtotime('+1 day')) ?>">
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Số lượng khách <span class="text-danger">*</span></label>
-                                <input type="number" name="total_people" id="totalPeople" required min="1" value="1" class="form-control">
-                            </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">SĐT liên hệ (Contact Phone) <span class="text-danger">*</span></label>
+                            <input type="text" name="contact_phone" class="form-control form-control-lg" required placeholder="Nhập số điện thoại liên hệ...">
+                            <div class="form-text">Số điện thoại này sẽ được lưu cho khách hàng đầu tiên trong đoàn.</div>
                         </div>
 
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Ghi chú / Yêu cầu đặc biệt</label>
-                            <textarea name="note" class="form-control" rows="3" placeholder="VD: Khách ăn chay, cần đón tại sân bay, khách đoàn công ty..."></textarea>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Ngày khởi hành <span class="text-danger">*</span></label>
+                            <input type="date" name="start_date" class="form-control" required
+                                value="<?= date('Y-m-d', strtotime('+1 day')) ?>"
+                                min="<?= date('Y-m-d') ?>">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Số lượng khách (Đoàn/Lẻ) <span class="text-danger">*</span></label>
+                            <input type="number" name="total_people" class="form-control" required min="1" max="100" value="1" placeholder="Nhập số người...">
+                            <div class="form-text text-primary">Hệ thống sẽ tự động kiểm tra chỗ trống khi bấm Tiếp tục.</div>
                         </div>
                     </div>
+                </div>
+                <div class="card-footer bg-white py-3 text-end">
+                    <button type="submit" class="btn btn-primary px-4 fw-bold">
+                        Tiếp tục <i class="bi bi-arrow-right ms-1"></i>
+                    </button>
                 </div>
             </div>
+        </form>
 
-            <div class="col-lg-5">
-                <div class="card border-0 shadow-sm mb-4">
-                    <div class="card-header bg-white py-3">
-                        <h6 class="m-0 font-weight-bold text-primary"><i class="bi bi-person-lines-fill me-2"></i>Khách hàng</h6>
+    <?php elseif ($step == 2): ?>
+        <form method="post" action="<?= BASE_URL ?>?act=admin-bookings-store">
+            <input type="hidden" name="tour_id" value="<?= $preData['tour_id'] ?>">
+            <input type="hidden" name="start_date" value="<?= $preData['start_date'] ?>">
+            <input type="hidden" name="total_people" value="<?= $preData['total_people'] ?>">
+            <input type="hidden" name="total_price" value="<?= $totalPrice ?>">
+
+            <input type="hidden" name="contact_phone" value="<?= htmlspecialchars($preData['contact_phone']) ?>">
+
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <div class="card border-0 shadow-sm mb-3">
+                        <div class="card-header bg-primary text-white py-3">
+                            <h6 class="m-0 fw-bold"><i class="bi bi-receipt me-2"></i>Thông tin Booking</h6>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush mb-3">
+                                <li class="list-group-item px-0 d-flex justify-content-between">
+                                    <span class="text-muted">Tour:</span>
+                                    <span class="fw-bold text-end" style="max-width:60%"><?= htmlspecialchars($tour['tour_name']) ?></span>
+                                </li>
+                                <li class="list-group-item px-0 d-flex justify-content-between">
+                                    <span class="text-muted">SĐT liên hệ:</span>
+                                    <span class="fw-bold text-danger"><?= htmlspecialchars($preData['contact_phone']) ?></span>
+                                </li>
+                                <li class="list-group-item px-0 d-flex justify-content-between">
+                                    <span class="text-muted">Ngày đi:</span>
+                                    <span class="fw-bold text-primary"><?= date('d/m/Y', strtotime($preData['start_date'])) ?></span>
+                                </li>
+                                <li class="list-group-item px-0 d-flex justify-content-between">
+                                    <span class="text-muted">Số lượng:</span>
+                                    <span class="fw-bold"><?= $preData['total_people'] ?> người</span>
+                                </li>
+                            </ul>
+                            <div class="alert alert-light border text-center mb-0">
+                                <small class="text-muted">Tổng tạm tính</small>
+                                <div class="fs-4 fw-bold text-danger"><?= number_format($totalPrice) ?> ₫</div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Chọn Khách hàng <span class="text-danger">*</span></label>
-                            <select name="customer_id" class="form-select" required>
-                                <option value="">-- Tìm khách hàng --</option>
-                                <?php foreach ($customers as $c): ?>
-                                    <option value="<?= $c['user_id'] ?>">
-                                        <?= htmlspecialchars($c['full_name']) ?> (<?= $c['phone'] ?? $c['email'] ?>)
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                            <div class="form-text text-end"><a href="#" class="text-decoration-none small">+ Tạo khách mới</a></div>
+
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <label class="form-label fw-bold">Yêu cầu đặc biệt (Ghi chú chung)</label>
+                            <textarea name="note" class="form-control" rows="4" placeholder="VD: Cần xe đưa đón, ăn chay cho 2 người..."></textarea>
                         </div>
                     </div>
                 </div>
 
-                <div class="card border-0 shadow-sm bg-light">
-                    <div class="card-body">
-                        <h6 class="fw-bold text-muted mb-3">TỔNG THANH TOÁN</h6>
-
-                        <div class="d-flex justify-content-between mb-2">
-                            <span>Đơn giá tour:</span>
-                            <span class="fw-semibold" id="displayPrice">0 ₫</span>
+                <div class="col-lg-8">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                            <h6 class="m-0 fw-bold text-success"><i class="bi bi-people-fill me-2"></i>Danh sách hành khách</h6>
+                            <span class="badge bg-warning text-dark">Trạng thái: Tạm giữ chỗ</span>
                         </div>
-                        <div class="d-flex justify-content-between mb-3">
-                            <span>Số lượng:</span>
-                            <span class="fw-semibold"><span id="displayPeople">1</span> người</span>
+                        <div class="card-body bg-light">
+                            <?php for ($i = 0; $i < $preData['total_people']; $i++): ?>
+                                <div class="card mb-3 border-0 shadow-sm">
+                                    <div class="card-body">
+                                        <div class="row align-items-center mb-2">
+                                            <div class="col-auto">
+                                                <span class="badge bg-secondary rounded-circle">#<?= $i + 1 ?></span>
+                                            </div>
+                                            <div class="col">
+                                                <h6 class="fw-bold text-muted mb-0">Thông tin khách hàng <?= $i + 1 ?></h6>
+                                                <?php if ($i == 0): ?>
+                                                    <small class="text-success fst-italic">(SĐT "<?= htmlspecialchars($preData['contact_phone']) ?>" sẽ được lưu cho người này)</small>
+                                                <?php endif; ?>
+                                            </div>
+                                        </div>
+
+                                        <div class="row g-2">
+                                            <div class="col-md-4">
+                                                <label class="small text-muted">Họ và tên <span class="text-danger">*</span></label>
+                                                <input type="text" name="passengers[<?= $i ?>][full_name]" class="form-control form-control-sm" required placeholder="Nhập tên khách">
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label class="small text-muted">Giới tính</label>
+                                                <select name="passengers[<?= $i ?>][gender]" class="form-select form-select-sm">
+                                                    <option value="Nam">Nam</option>
+                                                    <option value="Nữ">Nữ</option>
+                                                    <option value="Khác">Khác</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="small text-muted">Ngày sinh</label>
+                                                <input type="date" name="passengers[<?= $i ?>][dob]" class="form-control form-control-sm">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="small text-muted">CMND/Hộ chiếu</label>
+                                                <input type="text" name="passengers[<?= $i ?>][passport_number]" class="form-control form-control-sm">
+                                            </div>
+                                            <?php if ($i > 0): ?>
+                                                <div class="col-md-4">
+                                                    <label class="small text-muted">SĐT riêng (nếu có)</label>
+                                                    <input type="text" name="passengers[<?= $i ?>][phone]" class="form-control form-control-sm">
+                                                </div>
+                                            <?php endif; ?>
+
+                                            <div class="col-12">
+                                                <label class="small text-muted">Ghi chú riêng (nếu có)</label>
+                                                <input type="text" name="passengers[<?= $i ?>][note]" class="form-control form-control-sm" placeholder="VD: Dị ứng tôm, trẻ em...">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endfor; ?>
                         </div>
-
-                        <hr>
-
-                        <div class="mb-3">
-                            <label class="form-label small text-muted">Tổng tiền (có thể sửa thủ công):</label>
-                            <div class="input-group input-group-lg">
-                                <input type="number" name="total_price" id="totalPrice" required class="form-control fw-bold text-primary" value="0">
-                                <span class="input-group-text">₫</span>
-                            </div>
-                        </div>
-
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary btn-lg">
-                                <i class="bi bi-check-circle me-2"></i>Xác nhận Booking
+                        <div class="card-footer bg-white py-3 text-end">
+                            <a href="<?= BASE_URL ?>?act=admin-bookings-create" class="btn btn-light me-2">Quay lại</a>
+                            <button type="submit" class="btn btn-success px-4 fw-bold">
+                                <i class="bi bi-check-circle-fill me-2"></i> Xác nhận & Lưu Booking
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
-
-        </div>
-    </form>
+        </form>
+    <?php endif; ?>
 </div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const tourSelect = document.getElementById('tourSelect');
-        const peopleInput = document.getElementById('totalPeople');
-        const priceInput = document.getElementById('totalPrice');
-
-        const displayPrice = document.getElementById('displayPrice');
-        const displayPeople = document.getElementById('displayPeople');
-
-        function calculateTotal() {
-            // Lấy giá tour từ thuộc tính data-price của option đang chọn
-            const selectedOption = tourSelect.options[tourSelect.selectedIndex];
-            const pricePerPax = parseFloat(selectedOption.getAttribute('data-price')) || 0;
-            const people = parseInt(peopleInput.value) || 1;
-
-            const total = pricePerPax * people;
-
-            // Cập nhật giao diện
-            priceInput.value = total;
-            displayPrice.textContent = new Intl.NumberFormat('vi-VN').format(pricePerPax) + ' ₫';
-            displayPeople.textContent = people;
-        }
-
-        // Lắng nghe sự kiện thay đổi
-        tourSelect.addEventListener('change', calculateTotal);
-        peopleInput.addEventListener('input', calculateTotal);
-    });
-</script>
