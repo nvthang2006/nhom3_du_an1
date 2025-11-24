@@ -31,17 +31,19 @@ class AuthController extends BaseController
         }
 
         // Đăng nhập thành công
-        Auth::login($u);
-        header('Location: ' . BASE_URL . 'index.php?act=admin-dashboard');
-        exit;
-        // Nếu là admin → vào trang admin
         if ($u['role'] === 'admin') {
-            return $this->redirect('/DA1/index.php/admin-dashboard');
+            header('Location: ' . BASE_URL . '?act=admin-dashboard');
+            exit;
         }
 
-        // Nếu là HDV → vào trang HDV
         if ($u['role'] === 'hdv') {
-            return $this->redirect('/DA1/index.php/hdv-dashboard');
+            header('Location: ' . BASE_URL . '?act=hdv-dashboard');
+            exit;
+        }
+
+        if ($u['role'] === 'customer') {
+            header('Location: ' . BASE_URL); // Hoặc trang chủ khách hàng
+            exit;
         }
 
         // Nếu các role khác => không có quyền

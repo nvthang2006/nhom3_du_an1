@@ -258,16 +258,40 @@ if (class_exists('\App\Core\Auth')) {
 
       <!-- Navigation -->
       <nav class="side-nav" aria-label="Main admin menu">
-        <a href="<?= BASE_URL ?>?act=admin-dashboard" class="<?= ($_SERVER['REQUEST_URI'] ?? '') === ($base . '/admin') ? 'active' : '' ?>"><i class="bi bi-speedometer2"></i> <span class="d-none d-md-inline">Dashboard</span></a>
-        <a href="<?= BASE_URL ?>?act=admin-tours" class="<?= (strpos($_SERVER['REQUEST_URI'], '/admin/tours') !== false) ? 'active' : '' ?>"><i class="bi bi-geo-alt"></i> <span class="d-none d-md-inline">Quản lý Tour</span></a>
-        <a href="<?= BASE_URL ?>?act=admin-bookings" class="<?= (strpos($_SERVER['REQUEST_URI'], '/admin/bookings') !== false) ? 'active' : '' ?>"><i class="bi bi-journal-check"></i> <span class="d-none d-md-inline">Đặt chỗ</span></a>
-        <a href="<?= $base ?>/admin/guides" class="<?= (strpos($_SERVER['REQUEST_URI'], '/admin/guides') !== false) ? 'active' : '' ?>"><i class="bi bi-people"></i> <span class="d-none d-md-inline">Hướng dẫn viên</span></a>
-        <a href="<?= $base ?>/admin/reports" class="<?= (strpos($_SERVER['REQUEST_URI'], '/admin/reports') !== false) ? 'active' : '' ?>"><i class="bi bi-bar-chart"></i> <span class="d-none d-md-inline">Báo cáo</span></a>
+        
+        <?php if (isset($user['role']) && $user['role'] === 'admin'): ?>
+            <div class="small-muted text-uppercase fw-bold mb-2 mt-2 px-2" style="font-size: 0.75rem;">Quản trị</div>
+            
+            <a href="<?= BASE_URL ?>?act=admin-dashboard" class="<?= ($_GET['act'] ?? '') === 'admin-dashboard' ? 'active' : '' ?>">
+                <i class="bi bi-speedometer2"></i> Dashboard
+            </a>
+            <a href="<?= BASE_URL ?>?act=admin-tours" class="<?= (strpos($_SERVER['REQUEST_URI'], 'admin-tours') !== false) ? 'active' : '' ?>">
+                <i class="bi bi-geo-alt"></i> Quản lý Tour
+            </a>
+            <a href="<?= BASE_URL ?>?act=admin-bookings" class="<?= (strpos($_SERVER['REQUEST_URI'], 'admin-bookings') !== false) ? 'active' : '' ?>">
+                <i class="bi bi-journal-check"></i> Đặt chỗ (Booking)
+            </a>
+            <a href="#"><i class="bi bi-people"></i> Hướng dẫn viên</a>
+            <a href="#"><i class="bi bi-bar-chart"></i> Báo cáo</a>
+            
+            <a href="#"><i class="bi bi-gear"></i> Cấu hình</a>
+        <?php endif; ?>
+
+
+        <?php if (isset($user['role']) && $user['role'] === 'hdv'): ?>
+            <div class="small-muted text-uppercase fw-bold mb-2 mt-2 px-2" style="font-size: 0.75rem;">Hướng dẫn viên</div>
+
+            <a href="<?= BASE_URL ?>?act=hdv-dashboard" class="<?= ($_GET['act'] ?? '') === 'hdv-dashboard' ? 'active' : '' ?>">
+                <i class="bi bi-calendar-week"></i> Lịch dẫn tour
+            </a>
+            
+            <a href="#"><i class="bi bi-person-badge"></i> Hồ sơ của tôi</a>
+        <?php endif; ?>
+
 
         <hr style="border-color: rgba(255,255,255,0.04)">
-
-        <a href="<?= $base ?>/admin/settings"><i class="bi bi-gear"></i> <span class="d-none d-md-inline">Cấu hình</span></a>
-        <a href="<?= BASE_URL ?>?act=logout"><i class="bi bi-box-arrow-right"></i> <span class="d-none d-md-inline">Đăng xuất</span></a>
+        
+        <a href="<?= BASE_URL ?>?act=logout"><i class="bi bi-box-arrow-right"></i> Đăng xuất</a>
       </nav>
 
       <div class="mt-auto d-none d-md-block small-muted px-2" style="margin-top:18px;">
