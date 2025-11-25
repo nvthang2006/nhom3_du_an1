@@ -51,6 +51,8 @@ match ($act) {
     'admin-bookings-create' => (new App\Controllers\Admin\BookingController())->create(),
     'admin-bookings-store' => (new App\Controllers\Admin\BookingController())->store(),
     'admin-bookings-prepare' => (new App\Controllers\Admin\BookingController())->prepare(),
+    'admin-bookings-edit' => (new App\Controllers\Admin\BookingController())->edit(),
+    'admin-bookings-update' => (new App\Controllers\Admin\BookingController())->update(),
 
     // HDV
     'hdv-dashboard' => (new App\Controllers\Hdv\DashboardController())->index(),
