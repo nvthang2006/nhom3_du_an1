@@ -20,19 +20,15 @@ class AuthController extends BaseController
         $m = new User();
         $u = $m->findByEmail($email);
 
-        // Không tìm thấy user
         if (!$u) {
             return $this->view('login', ['error' => 'Email không tồn tại']);
         }
 
-
-        // Sai mật khẩu
         if (!password_verify($pass, $u['password'])) {
             return $this->view('login', ['error' => 'Mật khẩu không đúng']);
         }
 
         Auth::login($u);
-        // Đăng nhập thành công
         if ($u['role'] === 'admin') {
             header('Location: ' . BASE_URL . '?act=admin-dashboard');
             exit;
@@ -44,11 +40,10 @@ class AuthController extends BaseController
         }
 
         if ($u['role'] === 'customer') {
-            header('Location: ' . BASE_URL); // Hoặc trang chủ khách hàng
+            header('Location: ' . BASE_URL);
             exit;
         }
 
-        // Nếu các role khác => không có quyền
         return $this->view('login', ['error' => 'Tài khoản không có quyền truy cập']);
     }
 
@@ -65,19 +60,16 @@ class AuthController extends BaseController
         $password  = $_POST['password'] ?? '';
         $confirm   = $_POST['password_confirmation'] ?? '';
 
-        // Check mật khẩu khớp
         if ($password !== $confirm) {
             return $this->view('register', ['error' => 'Mật khẩu không khớp']);
         }
 
         $m = new User();
 
-        // Check email tồn tại
         if ($m->findByEmail($email)) {
             return $this->view('register', ['error' => 'Email đã tồn tại']);
         }
 
-        // Tạo user
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
         $m->create([
@@ -85,7 +77,7 @@ class AuthController extends BaseController
             'email'     => $email,
             'phone'     => $phone,
             'password'  => $hashedPassword,
-            'role'      => 'user' // mặc định
+            'role'      => 'user'
         ]);
 
         $_SESSION['success'] = 'Đăng ký thành công, hãy đăng nhập.';
