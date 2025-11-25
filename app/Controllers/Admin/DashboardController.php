@@ -14,7 +14,6 @@ class DashboardController extends AdminBaseController
 
     public function index()
     {
-        // 1. Khởi tạo Model
         $tourModel = new Tour();
 
         // 2. Lấy dữ liệu thống kê

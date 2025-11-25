@@ -25,11 +25,13 @@ class AuthController extends BaseController
             return $this->view('login', ['error' => 'Email không tồn tại']);
         }
 
+
         // Sai mật khẩu
         if (!password_verify($pass, $u['password'])) {
             return $this->view('login', ['error' => 'Mật khẩu không đúng']);
         }
 
+        Auth::login($u);
         // Đăng nhập thành công
         if ($u['role'] === 'admin') {
             header('Location: ' . BASE_URL . '?act=admin-dashboard');
