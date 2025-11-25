@@ -15,13 +15,11 @@ class TourSchedule extends BaseModel
     }
     public function getByTourId($tourId)
     {
-        // Lấy tất cả lịch trình của tour này, sắp xếp theo ngày (day_number) tăng dần
         $sql = "SELECT * FROM {$this->table} WHERE tour_id = :id ORDER BY day_number ASC";
         return $this->fetchAll($sql, ['id' => $tourId]);
     }
     public function update($id, $data)
     {
-        // Xây dựng câu truy vấn UPDATE dinamic
         $sets = [];
         foreach ($data as $key => $value) {
             $sets[] = "{$key} = :{$key}";
@@ -41,12 +39,10 @@ class TourSchedule extends BaseModel
     {
         if (empty($ids)) return;
 
-        // Tạo chuỗi placeholder ví dụ: (?,?,?)
         $placeholders = implode(',', array_fill(0, count($ids), '?'));
         
         $sql = "DELETE FROM {$this->table} WHERE {$this->primaryKey} IN ({$placeholders})";
         
-        // Sử dụng execute với mảng giá trị tuần tự (không cần key)
         $this->execute($sql, $ids);
     }
 }

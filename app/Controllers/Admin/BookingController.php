@@ -29,15 +29,11 @@ class BookingController extends AdminBaseController
         Auth::requireRole(['admin']);
         $db = Database::getConnection();
 
-        // Lấy danh sách tour đang hoạt động
         $tours = $db->query("SELECT tour_id, tour_name, price, max_people FROM tours WHERE status = 'Hoạt động'")->fetchAll();
-        // Lấy danh sách user để làm người liên hệ
-        // $customers = $db->query("SELECT user_id, full_name, phone, email FROM users WHERE role != 'admin'")->fetchAll();
 
         $this->view('admin/bookings/create', [
             'step'      => 1,
             'tours'     => $tours,
-            // 'customers' => $customers
         ]);
     }
 
@@ -51,7 +47,6 @@ class BookingController extends AdminBaseController
         $mTour = new Tour();
         $tour = $mTour->find($tour_id);
 
-        // 1. Logic tự động kiểm tra chỗ trống
         $booked = $mTour->getBookedSlots($tour_id);
         $max    = $tour['max_people'] ?? 20;
         $available = $max - $booked;
@@ -61,7 +56,6 @@ class BookingController extends AdminBaseController
             return $this->redirect('?act=admin-bookings-create');
         }
 
-        // 2. Tính toán sơ bộ
         $totalPrice = $tour['price'] * $people_count;
         $admin_user = Auth::user();
         // Lấy thông tin khách hàng đại diện để hiển thị lại
@@ -71,12 +65,10 @@ class BookingController extends AdminBaseController
             'phone'     => $contact_phone,
             'email'     => htmlspecialchars($admin_user['email'] ?? 'N/A')
         ];
-        // 3. Chuyển sang View Bước 2
         $this->view('admin/bookings/create', [
             'step'       => 2,
             'tour'       => $tour,
             'customer'   => $customer,
-            // Truyền ID admin làm created_by và SĐT liên hệ sang bước 2
             'preData'    => array_merge($_POST, [
                 'contact_phone' => $contact_phone
             ]),
@@ -89,16 +81,11 @@ class BookingController extends AdminBaseController
         Auth::requireRole(['admin']);
         $db = Database::getConnection();
 
-        // Nhận dữ liệu từ form
         $tour_id      = $_POST['tour_id'];
 
-        // --- [SỬA ĐOẠN NÀY] ---
-        // CŨ (Gây lỗi): $created_by = $_POST['created_by']; 
-        // MỚI (Sửa thành): Lấy ID từ session của Admin đang đăng nhập
+
         $user         = Auth::user();
         $created_by   = $user['user_id'];
-        // ----------------------
-
         $start_date   = $_POST['start_date'];
         $total_people = $_POST['total_people'];
         $total_price  = $_POST['total_price'];
@@ -108,15 +95,13 @@ class BookingController extends AdminBaseController
 
         try {
             $db->beginTransaction();
-
-            // Các đoạn code bên dưới giữ nguyên...
             $sql = "INSERT INTO bookings (tour_id, created_by, total_people, total_price, start_date, status, note) 
                     VALUES (:tid, :uid, :ppl, :price, :date, 'Chờ xác nhận', :note)";
 
             $stmt = $db->prepare($sql);
             $stmt->execute([
                 'tid'   => $tour_id,
-                'uid'   => $created_by, // Biến này giờ đã có giá trị từ Auth::user()
+                'uid'   => $created_by, 
                 'ppl'   => $total_people,
                 'price' => $total_price,
                 'date'  => $start_date,
@@ -124,7 +109,6 @@ class BookingController extends AdminBaseController
             ]);
             $bookingId = $db->lastInsertId();
 
-            // 2. Lưu chi tiết từng khách (Đoàn hoặc Lẻ)
             $cusModel = new CustomerInBooking();
             foreach ($passengers as $index => $p) {
                 $phone_to_save = ($index == 0) ? $contact_phone : ($p['phone'] ?? null);
@@ -134,7 +118,7 @@ class BookingController extends AdminBaseController
                     'full_name'       => $p['full_name'],
                     'gender'          => $p['gender'],
                     'dob'             => !empty($p['dob']) ? $p['dob'] : null,
-                    'phone'           => $phone_to_save, // <-- SĐT liên hệ được lưu ở đây
+                    'phone'           => $phone_to_save, 
                     'passport_number' => $p['passport_number'],
                     'note'            => $p['note']
                 ]);
@@ -185,17 +169,14 @@ class BookingController extends AdminBaseController
 
         $booking_id = $_POST['booking_id'];
         $status     = $_POST['status'];
-        $passengers = $_POST['customers'] ?? []; // Mảng danh sách khách từ form
+        $passengers = $_POST['customers'] ?? [];
 
         try {
             $db->beginTransaction();
-
-            // 1. Cập nhật trạng thái Booking
             $sqlBooking = "UPDATE bookings SET status = :st WHERE booking_id = :id";
             $stmt = $db->prepare($sqlBooking);
             $stmt->execute(['st' => $status, 'id' => $booking_id]);
 
-            // 2. Cập nhật từng khách hàng
             foreach ($passengers as $cusId => $data) {
                 $sqlUpdate = "UPDATE customers_in_booking SET 
                               full_name = :fn, 
@@ -221,7 +202,7 @@ class BookingController extends AdminBaseController
 
             $db->commit();
             $_SESSION['flash'] = "Cập nhật Booking #$booking_id thành công!";
-            $this->redirect("?act=admin-bookings"); // Quay về danh sách hoặc edit
+            $this->redirect("?act=admin-bookings");
 
         } catch (\Exception $e) {
             $db->rollBack();
