@@ -157,7 +157,7 @@
                                                 <input type="date" name="passengers[<?= $i ?>][dob]" class="form-control form-control-sm">
                                             </div>
                                             <div class="col-md-3">
-                                                <label class="small text-muted">CMND/Hộ chiếu</label>
+                                                <label class="small text-muted">CMND</label>
                                                 <input type="text" name="passengers[<?= $i ?>][passport_number]" class="form-control form-control-sm">
                                             </div>
                                             <?php if ($i > 0): ?>

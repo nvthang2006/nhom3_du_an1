@@ -74,7 +74,7 @@
                                             <select name="customers[<?= $cus['customer_id'] ?>][gender]" class="form-select form-select-sm">
                                                 <option value="Nam" <?= $cus['gender']=='Nam'?'selected':'' ?>>Nam</option>
                                                 <option value="Nữ" <?= $cus['gender']=='Nữ'?'selected':'' ?>>Nữ</option>
-                                                <option value="Khác" <?= $cus['gender']=='Khác'?'selected':'' ?>>Khác</option>
+                                                <option value="Khác" <?= $cus['gender']=='Khác'?'selected':'' ?> disabled>Khác</option>
                                             </select>
                                         </div>
                                         <div class="col-md-3">
