@@ -327,7 +327,6 @@ if (class_exists('\App\Core\Auth')) {
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenuBtn">
               <li class="dropdown-header"><?= htmlspecialchars($user['full_name'] ?? ($user['email'] ?? 'Admin')) ?></li>
               <li><a class="dropdown-item" href="<?= $base ?>/admin/profile">Hồ sơ</a></li>
-              <li><a class="dropdown-item" href="<?= $base ?>/admin/settings">Cài đặt</a></li>
               <li>
                 <hr class="dropdown-divider">
               </li>
