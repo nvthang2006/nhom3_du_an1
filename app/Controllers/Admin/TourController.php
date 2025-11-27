@@ -88,16 +88,22 @@ class TourController extends AdminBaseController
     public function show()
     {
         $id = $_GET['id'] ?? 0;
-
         $m = new Tour();
         $tour = $m->find($id);
 
         $scheduleModel = new TourSchedule();
         $schedules = $scheduleModel->getByTourId($id);
 
+        // --- THÊM: Lấy danh sách lịch khởi hành ---
+        $depModel = new \App\Models\TourDeparture();
+        // Lấy tất cả lịch (hoặc chỉ lịch tương lai tùy bạn)
+        $departures = $depModel->getUpcomingByTour($id);
+        // ------------------------------------------
+
         $this->view('admin/tours/detail', [
             'tour' => $tour,
-            'schedules' => $schedules
+            'schedules' => $schedules,
+            'departures' => $departures // Truyền sang View
         ]);
     }
 
@@ -109,7 +115,7 @@ class TourController extends AdminBaseController
         $tour = $m->find($id);
 
         if (!$tour) {
-            die("Tour không tồn tại"); 
+            die("Tour không tồn tại");
         }
 
         $schModel = new TourSchedule();
@@ -117,7 +123,7 @@ class TourController extends AdminBaseController
 
         $this->view('admin/tours/edit', [
             'tour' => $tour,
-            'schedules' => $schedules 
+            'schedules' => $schedules
         ]);
     }
 
@@ -137,7 +143,7 @@ class TourController extends AdminBaseController
             'description'   => $_POST['description'],
             'price'         => $_POST['price'],
             'duration_days' => $_POST['duration_days'],
-            'max_people'    => $_POST['max_people'] ?? 20,  
+            'max_people'    => $_POST['max_people'] ?? 20,
             'policy'        => $_POST['policy'],
             'status'        => $_POST['status'],
         ];
@@ -154,7 +160,7 @@ class TourController extends AdminBaseController
 
         if (isset($_POST['schedules']) && is_array($_POST['schedules'])) {
             foreach ($_POST['schedules'] as $index => $item) {
-                $scheduleId = $item['id'] ?? null; 
+                $scheduleId = $item['id'] ?? null;
 
                 $imagePath = $item['old_image'] ?? null;
 
@@ -178,7 +184,7 @@ class TourController extends AdminBaseController
 
                 if ($scheduleId && in_array($scheduleId, $currentDbIds)) {
                     $schModel->update($scheduleId, $scheduleData);
-                    $submittedIds[] = $scheduleId; 
+                    $submittedIds[] = $scheduleId;
                 } else {
                     $scheduleData['tour_id'] = $tourId;
                     $schModel->add($scheduleData);
@@ -204,5 +210,43 @@ class TourController extends AdminBaseController
         $m = new Tour();
         $m->delete($id);
         $this->redirect('?act=admin-tours');
+    }
+
+    public function storeDeparture()
+    {
+        Auth::requireRole(['admin']);
+
+        $tourId = $_POST['tour_id'];
+        $startDate = $_POST['start_date'];
+        $duration = (int)$_POST['duration_days']; // Lấy từ hidden field hoặc query lại tour
+
+        // Tính ngày kết thúc
+        $endDate = date('Y-m-d', strtotime($startDate . " + $duration days"));
+
+        $data = [
+            'tour_id' => $tourId,
+            'start_date' => $startDate,
+            'end_date' => $endDate,
+            'price' => $_POST['price'],
+            'max_people' => $_POST['max_people']
+        ];
+
+        (new \App\Models\TourDeparture())->create($data);
+
+        $_SESSION['flash'] = "Đã thêm lịch khởi hành ngày " . date('d/m', strtotime($startDate));
+        $this->redirect("?act=admin-tours-detail&id=$tourId");
+    }
+
+    // 3. Thêm hàm xóa lịch
+    public function deleteDeparture()
+    {
+        Auth::requireRole(['admin']);
+        $id = $_POST['departure_id'];
+        $tourId = $_POST['tour_id'];
+
+        (new \App\Models\TourDeparture())->delete($id);
+
+        $_SESSION['flash'] = "Đã xóa lịch khởi hành.";
+        $this->redirect("?act=admin-tours-detail&id=$tourId");
     }
 }

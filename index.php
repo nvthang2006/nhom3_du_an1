@@ -53,6 +53,8 @@ match ($act) {
     'admin-bookings-prepare' => (new App\Controllers\Admin\BookingController())->prepare(),
     'admin-bookings-edit' => (new App\Controllers\Admin\BookingController())->edit(),
     'admin-bookings-update' => (new App\Controllers\Admin\BookingController())->update(),
+    'admin-tours-store-departure' => (new \App\Controllers\Admin\TourController())->storeDeparture(),
+    'admin-tours-delete-departure' => (new \App\Controllers\Admin\TourController())->deleteDeparture(),
 
     // HDV
     'hdv-dashboard' => (new App\Controllers\Hdv\DashboardController())->index(),

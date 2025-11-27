@@ -20,55 +20,78 @@
     <?php endif; ?>
 
     <?php if ($step == 1): ?>
-        <form method="post" action="<?= BASE_URL ?>?act=admin-bookings-prepare">
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-white py-3">
-                    <h6 class="m-0 fw-bold text-primary"><i class="bi bi-gear me-2"></i>Thiết lập Booking</h6>
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white py-3">
+            <h6 class="m-0 fw-bold text-primary">Bước 1: Chọn Lịch Khởi Hành</h6>
+        </div>
+        <div class="card-body">
+            
+            <form method="GET" action="" id="selectTourForm" class="mb-4">
+                <input type="hidden" name="act" value="admin-bookings-create">
+                <label class="form-label fw-bold">Chọn Tour Du Lịch</label>
+                <div class="input-group">
+                    <select name="tour_id" class="form-select" onchange="this.form.submit()">
+                        <option value="">-- Chọn tour để xem lịch --</option>
+                        <?php foreach ($tours as $t): ?>
+                            <option value="<?= $t['tour_id'] ?>" <?= (isset($selectedTourId) && $selectedTourId == $t['tour_id']) ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($t['tour_name']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                    <button class="btn btn-primary" type="submit">Xem lịch</button>
                 </div>
-                <div class="card-body">
+            </form>
+
+            <?php if (!empty($selectedTourId)): ?>
+                <hr>
+                <form method="post" action="<?= BASE_URL ?>?act=admin-bookings-prepare">
+                    <input type="hidden" name="tour_id" value="<?= $selectedTourId ?>">
+
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label class="form-label fw-bold">Chọn Tour <span class="text-danger">*</span></label>
-                            <select name="tour_id" class="form-select form-select-lg" required>
-                                <option value="">-- Chọn tour du lịch --</option>
-                                <?php foreach ($tours as $t): ?>
-                                    <option value="<?= $t['tour_id'] ?>">
-                                        <?= htmlspecialchars($t['tour_name']) ?>
-                                        (Giá: <?= number_format($t['price']) ?>₫ - Max: <?= $t['max_people'] ?>)
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
+                            <label class="form-label fw-bold">Chọn Ngày Khởi Hành <span class="text-danger">*</span></label>
+                            
+                            <?php if (empty($departures)): ?>
+                                <div class="alert alert-warning">Tour này hiện chưa có lịch khởi hành nào. Vui lòng vào Quản lý Tour để tạo lịch trước.</div>
+                            <?php else: ?>
+                                <select name="departure_id" class="form-select form-select-lg" required>
+                                    <option value="">-- Chọn ngày đi --</option>
+                                    <?php foreach ($departures as $d): 
+                                        $av = $d['max_people'] - $d['booked_count'];
+                                        $disabled = $av <= 0 ? 'disabled' : '';
+                                        $text = date('d/m/Y', strtotime($d['start_date'])) . " - Giá: " . number_format($d['price']) . "đ (Còn $av chỗ)";
+                                        if ($av <= 0) $text .= " [HẾT CHỖ]";
+                                    ?>
+                                        <option value="<?= $d['departure_id'] ?>" <?= $disabled ?>>
+                                            <?= $text ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            <?php endif; ?>
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label fw-bold">SĐT liên hệ (Contact Phone) <span class="text-danger">*</span></label>
-                            <input type="text" name="contact_phone" class="form-control form-control-lg" required placeholder="Nhập số điện thoại liên hệ...">
-                            <div class="form-text">Số điện thoại này sẽ được lưu cho khách hàng đầu tiên trong đoàn.</div>
+                            <label class="form-label fw-bold">Số lượng khách <span class="text-danger">*</span></label>
+                            <input type="number" name="total_people" class="form-control form-control-lg" required min="1" value="1">
+                        </div>
+                        
+                        <div class="col-12">
+                            <label class="form-label fw-bold">SĐT Liên hệ</label>
+                            <input type="text" name="contact_phone" class="form-control" required placeholder="09xxx...">
                         </div>
 
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">Ngày khởi hành <span class="text-danger">*</span></label>
-                            <input type="date" name="start_date" class="form-control" required
-                                value="<?= date('Y-m-d', strtotime('+1 day')) ?>"
-                                min="<?= date('Y-m-d') ?>">
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">Số lượng khách (Đoàn/Lẻ) <span class="text-danger">*</span></label>
-                            <input type="number" name="total_people" class="form-control" required min="1" max="100" value="1" placeholder="Nhập số người...">
-                            <div class="form-text text-primary">Hệ thống sẽ tự động kiểm tra chỗ trống khi bấm Tiếp tục.</div>
+                        <div class="col-12 text-end mt-4">
+                            <button type="submit" class="btn btn-primary px-4 fw-bold" <?= empty($departures) ? 'disabled' : '' ?>>
+                                Tiếp tục (Nhập tên khách) <i class="bi bi-arrow-right"></i>
+                            </button>
                         </div>
                     </div>
-                </div>
-                <div class="card-footer bg-white py-3 text-end">
-                    <button type="submit" class="btn btn-primary px-4 fw-bold">
-                        Tiếp tục <i class="bi bi-arrow-right ms-1"></i>
-                    </button>
-                </div>
-            </div>
-        </form>
+                </form>
+            <?php endif; ?>
 
-    <?php elseif ($step == 2): ?>
+        </div>
+    </div>
+<?php elseif ($step == 2): ?>
         <form method="post" action="<?= BASE_URL ?>?act=admin-bookings-store">
             <input type="hidden" name="tour_id" value="<?= $preData['tour_id'] ?>">
             <input type="hidden" name="start_date" value="<?= $preData['start_date'] ?>">

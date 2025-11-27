@@ -27,50 +27,82 @@ class BookingController extends AdminBaseController
     public function create()
     {
         Auth::requireRole(['admin']);
-        $db = Database::getConnection();
+        $db = \App\Core\Database::getConnection();
 
-        $tours = $db->query("SELECT tour_id, tour_name, price, max_people FROM tours WHERE status = 'Hoạt động'")->fetchAll();
+        // Lấy danh sách tour để đổ vào select box
+        $tours = $db->query("SELECT tour_id, tour_name FROM tours WHERE status = 'Hoạt động'")->fetchAll();
+
+        $selectedTourId = $_GET['tour_id'] ?? null;
+        $departures = [];
+
+        // Nếu đã chọn tour, lấy danh sách lịch khởi hành của tour đó
+        if ($selectedTourId) {
+            $depModel = new \App\Models\TourDeparture();
+            $departures = $depModel->getUpcomingByTour($selectedTourId);
+        }
 
         $this->view('admin/bookings/create', [
-            'step'      => 1,
-            'tours'     => $tours,
+            'step'       => 1,
+            'tours'      => $tours,
+            'selectedTourId' => $selectedTourId,
+            'departures' => $departures
         ]);
     }
+
+    // File: app/Controllers/Admin/BookingController.php
 
     public function prepare()
     {
         Auth::requireRole(['admin']);
 
-        $tour_id      = $_POST['tour_id'];
+        $departure_id = $_POST['departure_id']; // ID lịch khởi hành từ form
         $people_count = (int)$_POST['total_people'];
 
-        $mTour = new Tour();
-        $tour = $mTour->find($tour_id);
+        // 1. Lấy thông tin lịch khởi hành
+        $mDep = new \App\Models\TourDeparture();
+        $departure = $mDep->find($departure_id);
 
-        $booked = $mTour->getBookedSlots($tour_id);
-        $max    = $tour['max_people'] ?? 20;
-        $available = $max - $booked;
-
-        if ($people_count > $available) {
-            $_SESSION['error'] = "Tour này chỉ còn trống $available chỗ (Bạn nhập $people_count khách).";
+        if (!$departure) {
+            $_SESSION['error'] = "Không tìm thấy lịch khởi hành này.";
             return $this->redirect('?act=admin-bookings-create');
         }
 
-        $totalPrice = $tour['price'] * $people_count;
+        // 2. --- KHẮC PHỤC LỖI $tour ---
+        // Từ lịch khởi hành, lấy ra tour_id để tìm thông tin Tour gốc (Tên, mô tả...)
+        $mTour = new \App\Models\Tour(); // Hoặc use App\Models\Tour ở trên đầu file
+        $tour  = $mTour->find($departure['tour_id']);
+        // -----------------------------
+
+        // 3. Kiểm tra chỗ trống dựa trên Lịch khởi hành
+        $available = $departure['max_people'] - $departure['booked_count'];
+
+        if ($people_count > $available) {
+            $_SESSION['error'] = "Lịch ngày " . date('d/m', strtotime($departure['start_date'])) . " chỉ còn $available chỗ (Bạn nhập $people_count khách).";
+            return $this->redirect('?act=admin-bookings-create');
+        }
+
+        // 4. Tính toán giá (Dùng giá của lịch khởi hành)
+        $totalPrice = $departure['price'] * $people_count;
+
         $admin_user = Auth::user();
-        // Lấy thông tin khách hàng đại diện để hiển thị lại
         $contact_phone = $_POST['contact_phone'] ?? 'N/A';
+
         $customer = [
             'full_name' => htmlspecialchars($admin_user['full_name'] ?? 'Admin'),
             'phone'     => $contact_phone,
             'email'     => htmlspecialchars($admin_user['email'] ?? 'N/A')
         ];
+
+        // 5. Truyền cả $tour và $departure xuống View
         $this->view('admin/bookings/create', [
             'step'       => 2,
-            'tour'       => $tour,
+            'tour'       => $tour,       // <--- Đã có biến $tour để View hiển thị tên
+            'departure'  => $departure,  // Truyền thêm cái này để View hiển thị ngày đi chính xác
             'customer'   => $customer,
             'preData'    => array_merge($_POST, [
-                'contact_phone' => $contact_phone
+                'contact_phone' => $contact_phone,
+                'tour_id'       => $tour['tour_id'], // Giữ lại tour_id cho các form ẩn
+                'start_date'    => $departure['start_date'] // Cập nhật ngày đi từ lịch đã chọn
             ]),
             'totalPrice' => $totalPrice
         ]);
@@ -101,7 +133,7 @@ class BookingController extends AdminBaseController
             $stmt = $db->prepare($sql);
             $stmt->execute([
                 'tid'   => $tour_id,
-                'uid'   => $created_by, 
+                'uid'   => $created_by,
                 'ppl'   => $total_people,
                 'price' => $total_price,
                 'date'  => $start_date,
@@ -118,7 +150,7 @@ class BookingController extends AdminBaseController
                     'full_name'       => $p['full_name'],
                     'gender'          => $p['gender'],
                     'dob'             => !empty($p['dob']) ? $p['dob'] : null,
-                    'phone'           => $phone_to_save, 
+                    'phone'           => $phone_to_save,
                     'passport_number' => $p['passport_number'],
                     'note'            => $p['note']
                 ]);
@@ -203,7 +235,6 @@ class BookingController extends AdminBaseController
             $db->commit();
             $_SESSION['flash'] = "Cập nhật Booking #$booking_id thành công!";
             $this->redirect("?act=admin-bookings");
-
         } catch (\Exception $e) {
             $db->rollBack();
             $_SESSION['error'] = "Lỗi cập nhật: " . $e->getMessage();
