@@ -53,7 +53,12 @@ match ($act) {
     'admin-tours-detail' => (new App\Controllers\Admin\TourController())->show(),
     'admin-bookings' => (new App\Controllers\Admin\BookingController())->index(),
     'admin-bookings-create' => (new App\Controllers\Admin\BookingController())->create(),
-    'admin-bookings-store'  => (new App\Controllers\Admin\BookingController())->store(),
+    'admin-bookings-store' => (new App\Controllers\Admin\BookingController())->store(),
+    'admin-bookings-prepare' => (new App\Controllers\Admin\BookingController())->prepare(),
+    'admin-bookings-edit' => (new App\Controllers\Admin\BookingController())->edit(),
+    'admin-bookings-update' => (new App\Controllers\Admin\BookingController())->update(),
+    'admin-tours-store-departure' => (new \App\Controllers\Admin\TourController())->storeDeparture(),
+    'admin-tours-delete-departure' => (new \App\Controllers\Admin\TourController())->deleteDeparture(),
 
     // HDV
     'hdv-dashboard' => (new App\Controllers\Hdv\DashboardController())->index(),
