@@ -29,7 +29,11 @@ $act = $_GET['act'] ?? '/';
 
 // Định tuyến bằng match
 match ($act) {
+    // Public
+    // Khi nhập '/', tự chuyển đến login
     '/' => header("Location: ?act=login"),
+    // 'tours' => (new App\Controllers\HomeController())->tours(),
+    // 'tours-show' => (new App\Controllers\HomeController())->show(), // ?id=
 
     // Auth
     'login' => (new App\Controllers\AuthController())->showLogin(),
@@ -61,5 +65,19 @@ match ($act) {
     'hdv-checkin' => (new App\Controllers\Hdv\CheckinController())->list(),
     'hdv-checkin-create' => (new App\Controllers\Hdv\CheckinController())->create(),
 
+
+    // --- Quản lý HDV ---
+    'admin-hdv' => (new App\Controllers\Admin\HdvController())->index(),
+    'admin-hdv-edit' => (new App\Controllers\Admin\HdvController())->edit(),
+    'admin-hdv-update' => (new App\Controllers\Admin\HdvController())->update(),
+
+    // --- Quản lý Lịch khởi hành & Phân bổ ---
+    // 'admin-departures' => (new App\Controllers\Admin\DepartureController())->index(),
+    // 'admin-departures-create' => (new App\Controllers\Admin\DepartureController())->create(),
+    // 'admin-departures-store' => (new App\Controllers\Admin\DepartureController())->store(),
+    // 'admin-departures-manage' => (new App\Controllers\Admin\DepartureController())->manage(), // Trang phân bổ chính
+    // 'admin-departures-staff-update' => (new App\Controllers\Admin\DepartureController())->updateStaff(),
+    // 'admin-departures-service-add' => (new App\Controllers\Admin\DepartureController())->addService(),
+    
     default => http_response_code(404) && print("404 Not Found"),
 };

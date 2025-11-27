@@ -271,7 +271,7 @@ if (class_exists('\App\Core\Auth')) {
             <a href="<?= BASE_URL ?>?act=admin-bookings" class="<?= (strpos($_SERVER['REQUEST_URI'], 'admin-bookings') !== false) ? 'active' : '' ?>">
                 <i class="bi bi-journal-check"></i> Đặt chỗ (Booking)
             </a>
-            <a href="#"><i class="bi bi-people"></i> Hướng dẫn viên</a>
+            <a href="<?= BASE_URL ?>?act=admin-hdv"><i class="bi bi-people"></i> Hướng dẫn viên</a>
             <a href="#"><i class="bi bi-bar-chart"></i> Báo cáo</a>
             
             <a href="#"><i class="bi bi-gear"></i> Cấu hình</a>
