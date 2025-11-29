@@ -71,24 +71,50 @@ if (class_exists('\App\Core\Auth')) {
       margin-bottom: 12px;
     }
 
-    .brand .logo {
-      width: 46px;
-      height: 46px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, #0ea5a4, #06b6d4);
+    .brand {
       display: flex;
       align-items: center;
       justify-content: center;
-      color: white;
-      font-weight: 700;
-      box-shadow: 0 6px 18px rgba(2, 6, 23, .25);
+      /* Căn giữa logo */
+      padding: 20px 10px;
+      /* Tăng khoảng cách trên dưới */
+      margin-bottom: 10px;
     }
 
-    .brand .title {
-      font-weight: 700;
-      font-size: 16px;
-      color: #fff;
+    /* Class mới cho ảnh logo dài */
+    /* --- LOGO ẢNH (Custom Image) --- */
+    .brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 15px;
+      /* Khoảng cách xung quanh logo */
+      margin-bottom: 10px;
     }
+
+    .brand-logo-img {
+      width: 100%;
+      max-width: 220px;
+      height: auto;
+      object-fit: contain;
+      border-radius: 12px;
+      
+      /* --- THÊM DÒNG NÀY --- */
+      mix-blend-mode: screen; 
+      /* --------------------- */
+      
+      display: block;
+    }
+
+    /* Khi sidebar thu nhỏ (trên PC) thì ẩn logo to đi */
+    .admin-sidebar.collapsed .brand-logo-img {
+      display: none;
+    }
+
+    /* (Tùy chọn) Hiện 1 icon nhỏ khi thu gọn nếu muốn */
+
+
+    
 
     .side-nav {
       margin-top: 12px;
@@ -238,11 +264,11 @@ if (class_exists('\App\Core\Auth')) {
     <!-- SIDEBAR -->
     <aside class="admin-sidebar" id="adminSidebar" role="navigation" aria-label="Sidebar">
       <div class="brand">
-        <div class="logo">DA1</div>
-        <div class="d-none d-md-block">
-          <div class="title">Admin panel</div>
-          <div class="small-muted"></div>
-        </div>
+        <a href="<?= BASE_URL ?>?act=admin-dashboard">
+          <img src="https://sf-static.upanhlaylink.com/img/image_20251128818773b4f94ebf2a2c8c036c713349e3.jpg"
+            class="brand-logo-img"
+            alt="Trips Logo">
+        </a>
       </div>
 
       <!-- User -->
@@ -258,39 +284,42 @@ if (class_exists('\App\Core\Auth')) {
 
       <!-- Navigation -->
       <nav class="side-nav" aria-label="Main admin menu">
-        
+
         <?php if (isset($user['role']) && $user['role'] === 'admin'): ?>
-            <div class="small-muted text-uppercase fw-bold mb-2 mt-2 px-2" style="font-size: 0.75rem;">Quản trị</div>
-            
-            <a href="<?= BASE_URL ?>?act=admin-dashboard" class="<?= ($_GET['act'] ?? '') === 'admin-dashboard' ? 'active' : '' ?>">
-                <i class="bi bi-speedometer2"></i> Dashboard
-            </a>
-            <a href="<?= BASE_URL ?>?act=admin-tours" class="<?= (strpos($_SERVER['REQUEST_URI'], 'admin-tours') !== false) ? 'active' : '' ?>">
-                <i class="bi bi-geo-alt"></i> Quản lý Tour
-            </a>
-            <a href="<?= BASE_URL ?>?act=admin-bookings" class="<?= (strpos($_SERVER['REQUEST_URI'], 'admin-bookings') !== false) ? 'active' : '' ?>">
-                <i class="bi bi-journal-check"></i> Đặt chỗ (Booking)
-            </a>
-            <a href="<?= BASE_URL ?>?act=admin-hdv"><i class="bi bi-people"></i> Hướng dẫn viên</a>
-            <a href="#"><i class="bi bi-bar-chart"></i> Báo cáo</a>
-            
-            <a href="#"><i class="bi bi-gear"></i> Cấu hình</a>
+          <div class="small-muted text-uppercase fw-bold mb-2 mt-2 px-2" style="font-size: 0.75rem;">Quản trị</div>
+
+          <a href="<?= BASE_URL ?>?act=admin-dashboard" class="<?= ($_GET['act'] ?? '') === 'admin-dashboard' ? 'active' : '' ?>">
+            <i class="bi bi-speedometer2"></i> Dashboard
+          </a>
+          <a href="<?= BASE_URL ?>?act=admin-tours" class="<?= (strpos($_SERVER['REQUEST_URI'], 'admin-tours') !== false) ? 'active' : '' ?>">
+            <i class="bi bi-geo-alt"></i> Quản lý Tour
+          </a>
+          <a href="<?= BASE_URL ?>?act=admin-bookings" class="<?= (strpos($_SERVER['REQUEST_URI'], 'admin-bookings') !== false) ? 'active' : '' ?>">
+            <i class="bi bi-journal-check"></i> Đặt chỗ (Booking)
+          </a>
+          <a href="<?= BASE_URL ?>?act=admin-hdv"><i class="bi bi-people"></i> Hướng dẫn viên</a>
+          <a href="<?= BASE_URL ?>?act=admin-suppliers" class="<?= (strpos($_SERVER['REQUEST_URI'], 'admin-suppliers') !== false) ? 'active' : '' ?>">
+            <i class="bi bi-building"></i> Đối tác & NCC
+          </a>
+          <a href="#"><i class="bi bi-bar-chart"></i> Báo cáo</a>
+
+          <a href="#"><i class="bi bi-gear"></i> Cấu hình</a>
         <?php endif; ?>
 
 
         <?php if (isset($user['role']) && $user['role'] === 'hdv'): ?>
-            <div class="small-muted text-uppercase fw-bold mb-2 mt-2 px-2" style="font-size: 0.75rem;">Hướng dẫn viên</div>
+          <div class="small-muted text-uppercase fw-bold mb-2 mt-2 px-2" style="font-size: 0.75rem;">Hướng dẫn viên</div>
 
-            <a href="<?= BASE_URL ?>?act=hdv-dashboard" class="<?= ($_GET['act'] ?? '') === 'hdv-dashboard' ? 'active' : '' ?>">
-                <i class="bi bi-calendar-week"></i> Lịch dẫn tour
-            </a>
-            
-            <a href="#"><i class="bi bi-person-badge"></i> Hồ sơ của tôi</a>
+          <a href="<?= BASE_URL ?>?act=hdv-dashboard" class="<?= ($_GET['act'] ?? '') === 'hdv-dashboard' ? 'active' : '' ?>">
+            <i class="bi bi-calendar-week"></i> Lịch dẫn tour
+          </a>
+
+          <a href="#"><i class="bi bi-person-badge"></i> Hồ sơ của tôi</a>
         <?php endif; ?>
 
 
         <hr style="border-color: rgba(255,255,255,0.04)">
-        
+
         <a href="<?= BASE_URL ?>?act=logout"><i class="bi bi-box-arrow-right"></i> Đăng xuất</a>
       </nav>
 

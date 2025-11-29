@@ -70,14 +70,21 @@ match ($act) {
     'admin-hdv' => (new App\Controllers\Admin\HdvController())->index(),
     'admin-hdv-edit' => (new App\Controllers\Admin\HdvController())->edit(),
     'admin-hdv-update' => (new App\Controllers\Admin\HdvController())->update(),
+    // --- Quản lý Nhà cung cấp ---
+    'admin-tours-add-supplier' => (new App\Controllers\Admin\TourController())->addSupplier(),
+    'admin-tours-remove-supplier' => (new App\Controllers\Admin\TourController())->removeSupplier(),
+    'admin-suppliers' => (new App\Controllers\Admin\SupplierController())->index(),
+    'admin-suppliers-create' => (new App\Controllers\Admin\SupplierController())->create(),
+    'admin-suppliers-store' => (new App\Controllers\Admin\SupplierController())->store(),
+    'admin-suppliers-edit' => (new App\Controllers\Admin\SupplierController())->edit(),
+    'admin-suppliers-update' => (new App\Controllers\Admin\SupplierController())->update(),
+    'admin-suppliers-delete' => (new App\Controllers\Admin\SupplierController())->delete(),
 
-    // --- Quản lý Lịch khởi hành & Phân bổ ---
-    // 'admin-departures' => (new App\Controllers\Admin\DepartureController())->index(),
-    // 'admin-departures-create' => (new App\Controllers\Admin\DepartureController())->create(),
-    // 'admin-departures-store' => (new App\Controllers\Admin\DepartureController())->store(),
-    // 'admin-departures-manage' => (new App\Controllers\Admin\DepartureController())->manage(), // Trang phân bổ chính
-    // 'admin-departures-staff-update' => (new App\Controllers\Admin\DepartureController())->updateStaff(),
-    // 'admin-departures-service-add' => (new App\Controllers\Admin\DepartureController())->addService(),
+    // --- Quản lý Điều hành Tour ---
+    'admin-departures-manage' => (new App\Controllers\Admin\DepartureController())->manage(),
+    'admin-departures-update-op' => (new App\Controllers\Admin\DepartureController())->updateOperational(),
+    'admin-departures-add-service' => (new App\Controllers\Admin\DepartureController())->addService(),
+    'admin-departures-delete-service' => (new App\Controllers\Admin\DepartureController())->deleteService(),
     
     default => http_response_code(404) && print("404 Not Found"),
 };

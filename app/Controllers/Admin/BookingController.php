@@ -114,6 +114,7 @@ class BookingController extends AdminBaseController
         $db = Database::getConnection();
 
         $tour_id      = $_POST['tour_id'];
+        $departure_id = $_POST['departure_id'];
 
 
         $user         = Auth::user();
@@ -127,12 +128,13 @@ class BookingController extends AdminBaseController
 
         try {
             $db->beginTransaction();
-            $sql = "INSERT INTO bookings (tour_id, created_by, total_people, total_price, start_date, status, note) 
-                    VALUES (:tid, :uid, :ppl, :price, :date, 'Chờ xác nhận', :note)";
+            $sql = "INSERT INTO bookings (tour_id, departure_id, created_by, total_people, total_price, start_date, status, note) 
+                VALUES (:tid, :did, :uid, :ppl, :price, :date, 'Chờ xác nhận', :note)";
 
             $stmt = $db->prepare($sql);
             $stmt->execute([
                 'tid'   => $tour_id,
+                'did'   => $departure_id,
                 'uid'   => $created_by,
                 'ppl'   => $total_people,
                 'price' => $total_price,
@@ -155,7 +157,8 @@ class BookingController extends AdminBaseController
                     'note'            => $p['note']
                 ]);
             }
-
+            $depModel = new \App\Models\TourDeparture();
+            $depModel->updateBookedCount($departure_id);
             $db->commit();
             $_SESSION['flash'] = "Đặt tour thành công! Booking #$bookingId đang chờ xác nhận.";
             $this->redirect('?act=admin-bookings');

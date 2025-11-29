@@ -8,7 +8,6 @@
                         <th>Họ tên / Email</th>
                         <th>Phân loại & Ngôn ngữ</th>
                         <th>Kinh nghiệm</th>
-                        <th>Đánh giá</th>
                         <th>Thao tác</th>
                     </tr>
                 </thead>
@@ -44,7 +43,6 @@
                                 </div>
                             </td>
                             <td><?= $h['experience_years'] ?> năm</td>
-                            <td class="text-warning fw-bold"><?= $h['rating'] ?> <i class="bi bi-star-fill"></i></td>
                             <td>
                                 <a href="<?= BASE_URL ?>?act=admin-hdv-edit&id=<?= $h['user_id'] ?>" class="btn btn-sm btn-primary">Hồ sơ chi tiết</a>
                             </td>
