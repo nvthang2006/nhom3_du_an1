@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 use App\Core\Auth;
 use App\Models\Tour;
 use App\Models\TourSchedule;
+use App\Models\Supplier;
 
 class TourController extends AdminBaseController
 {
@@ -94,19 +95,50 @@ class TourController extends AdminBaseController
         $scheduleModel = new TourSchedule();
         $schedules = $scheduleModel->getByTourId($id);
 
-        // --- THÊM: Lấy danh sách lịch khởi hành ---
         $depModel = new \App\Models\TourDeparture();
-        // Lấy tất cả lịch (hoặc chỉ lịch tương lai tùy bạn)
-        $departures = $depModel->getUpcomingByTour($id);
-        // ------------------------------------------
+        $upcomingDepartures = $depModel->getUpcomingByTour($id);
+        $historyDepartures  = $depModel->getHistoryByTour($id);
+
+        $supModel = new Supplier();
+        $suppliers = $supModel->getByTourId($id);
+
+        $allSuppliers = $supModel->all();
 
         $this->view('admin/tours/detail', [
             'tour' => $tour,
             'schedules' => $schedules,
-            'departures' => $departures // Truyền sang View
+            'upcomingDepartures' => $upcomingDepartures,
+            'historyDepartures' => $historyDepartures,
+            'suppliers' => $suppliers,
+            'allSuppliers' => $allSuppliers
         ]);
     }
 
+    public function addSupplier()
+    {
+        Auth::requireRole(['admin']);
+        $tourId = $_POST['tour_id'];
+        $supplierId = $_POST['supplier_id'];
+
+        $supModel = new Supplier();
+        $supModel->addToTour($tourId, $supplierId);
+
+        $_SESSION['flash'] = "Đã thêm nhà cung cấp vào tour.";
+        $this->redirect("?act=admin-tours-detail&id=$tourId");
+    }
+
+    public function removeSupplier()
+    {
+        Auth::requireRole(['admin']);
+        $tourId = $_POST['tour_id'];
+        $supplierId = $_POST['supplier_id'];
+
+        $supModel = new Supplier();
+        $supModel->removeFromTour($tourId, $supplierId);
+
+        $_SESSION['flash'] = "Đã gỡ nhà cung cấp khỏi tour.";
+        $this->redirect("?act=admin-tours-detail&id=$tourId");
+    }
     public function edit()
     {
         $id = $_GET['id'] ?? 0;

@@ -12,7 +12,7 @@
             <div class="col-md-4">
                 <div class="card mb-3">
                     <div class="card-body text-center">
-                        <img src="<?= !empty($hdv['avatar']) ? BASE_URL . $hdv['avatar'] : 'https://www.galeriemichael.com/wp-content/uploads/2024/03/anh-anime-chibi_7.jpeg' ?>" class="img-thumbnail mb-3" style="width:150px;height:150px;object-fit:cover">
+                        <img src="<?= !empty($hdv['avatar']) ? BASE_URL . $hdv['avatar'] : 'https://sf-static.upanhlaylink.com/img/image_202511277a136b95cd3247b106f567482db76471.jpg' ?>" class="img-thumbnail mb-3" style="width:150px;height:150px;object-fit:cover">
                         <input type="file" name="avatar" class="form-control mb-2">
                         <div class="fw-bold"><?= $hdv['email'] ?></div>
                         <div><?= $hdv['phone'] ?></div>
