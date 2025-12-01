@@ -8,6 +8,7 @@ use App\Models\TourService;
 use App\Models\User;
 use App\Models\Supplier;
 use App\Models\Tour;
+use App\Models\CustomerInBooking;
 
 class DepartureController extends AdminBaseController
 {
@@ -104,5 +105,73 @@ class DepartureController extends AdminBaseController
 
         $_SESSION['flash'] = "Đã xóa dịch vụ.";
         $this->redirect("?act=admin-departures-manage&id=$depId");
+    }
+
+    // [MỚI] Hiển thị danh sách khách (Manifest)
+    public function passengers()
+    {
+        $id = $_GET['id'] ?? 0;
+
+        $depModel = new TourDeparture();
+        $departure = $depModel->find($id);
+
+        if (!$departure) {
+            $_SESSION['error'] = "Không tìm thấy lịch khởi hành.";
+            $this->redirect('?act=admin-tours');
+        }
+
+        $tourModel = new Tour();
+        $tour = $tourModel->find($departure['tour_id']);
+
+        // Lấy danh sách khách
+        $cusModel = new CustomerInBooking();
+        $passengers = $cusModel->getPassengersByDeparture($id);
+
+        // Thống kê nam/nữ
+        $stats = ['total' => count($passengers), 'male' => 0, 'female' => 0, 'other' => 0];
+        foreach ($passengers as $p) {
+            if ($p['gender'] == 'Nam') $stats['male']++;
+            elseif ($p['gender'] == 'Nữ') $stats['female']++;
+            else $stats['other']++;
+        }
+
+        $this->view('admin/departures/passengers', [
+            'departure' => $departure,
+            'tour' => $tour,
+            'passengers' => $passengers,
+            'stats' => $stats
+        ]);
+    }
+
+    // [MỚI] Lưu cập nhật ghi chú
+    public function updatePassengers()
+    {
+        $departure_id = $_POST['departure_id'];
+        $data = $_POST['passengers'] ?? [];
+
+        $cusModel = new CustomerInBooking();
+        foreach ($data as $cusId => $info) {
+            $cusModel->updateQuickInfo($cusId, $info['note']);
+        }
+
+        $_SESSION['flash'] = "Đã cập nhật ghi chú cho đoàn.";
+        $this->redirect("?act=admin-departures-passengers&id=$departure_id");
+    }
+
+    // [MỚI] Trang in danh sách
+    public function printPassengers()
+    {
+        $id = $_GET['id'] ?? 0;
+
+        $depModel = new TourDeparture();
+        $departure = $depModel->find($id);
+        $tourModel = new Tour();
+        $tour = $tourModel->find($departure['tour_id']);
+        $cusModel = new CustomerInBooking();
+        $passengers = $cusModel->getPassengersByDeparture($id);
+
+        // Gọi view in ấn riêng
+        extract(['departure' => $departure, 'tour' => $tour, 'passengers' => $passengers]);
+        require __DIR__ . '/../../Views/admin/departures/print_passengers.php';
     }
 }

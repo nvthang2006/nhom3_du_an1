@@ -59,6 +59,10 @@ match ($act) {
     'admin-bookings-update' => (new App\Controllers\Admin\BookingController())->update(),
     'admin-tours-store-departure' => (new \App\Controllers\Admin\TourController())->storeDeparture(),
     'admin-tours-delete-departure' => (new \App\Controllers\Admin\TourController())->deleteDeparture(),
+    'admin-departures-passengers' => (new App\Controllers\Admin\DepartureController())->passengers(),
+    'admin-departures-update-passengers' => (new App\Controllers\Admin\DepartureController())->updatePassengers(),
+    'admin-departures-print' => (new App\Controllers\Admin\DepartureController())->printPassengers(),
+    'admin-tours-delete-gallery' => (new App\Controllers\Admin\TourController())->deleteGalleryImage(),
 
     // HDV
     'hdv-dashboard' => (new App\Controllers\Hdv\DashboardController())->index(),
@@ -85,6 +89,6 @@ match ($act) {
     'admin-departures-update-op' => (new App\Controllers\Admin\DepartureController())->updateOperational(),
     'admin-departures-add-service' => (new App\Controllers\Admin\DepartureController())->addService(),
     'admin-departures-delete-service' => (new App\Controllers\Admin\DepartureController())->deleteService(),
-    
+
     default => http_response_code(404) && print("404 Not Found"),
 };

@@ -87,4 +87,14 @@ class TourDeparture extends BaseModel
                 ORDER BY td.start_date DESC";
         return $this->fetchAll($sql, ['tid' => $tourId]);
     }
+
+    public function getHistoryByHdv($hdvId)
+    {
+        $sql = "SELECT d.*, t.tour_name 
+                FROM {$this->table} d
+                JOIN tours t ON d.tour_id = t.tour_id
+                WHERE d.hdv_id = :hid 
+                ORDER BY d.start_date DESC";
+        return $this->fetchAll($sql, ['hid' => $hdvId]);
+    }
 }

@@ -68,4 +68,46 @@
             </div>
         </div>
     </form>
+
+    <hr class="my-4">
+
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-white py-3">
+            <h5 class="m-0 font-weight-bold text-info"><i class="bi bi-clock-history me-2"></i>Lịch sử dẫn tour</h5>
+        </div>
+        <div class="card-body p-0">
+            <?php if (empty($history)): ?>
+                <div class="text-center py-4 text-muted">Chưa dẫn tour nào.</div>
+            <?php else: ?>
+                <table class="table table-striped mb-0">
+                    <thead>
+                        <tr>
+                            <th>Tên Tour</th>
+                            <th>Ngày đi</th>
+                            <th>Ngày về</th>
+                            <th>Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($history as $h): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($h['tour_name']) ?></td>
+                                <td><?= date('d/m/Y', strtotime($h['start_date'])) ?></td>
+                                <td><?= date('d/m/Y', strtotime($h['end_date'])) ?></td>
+                                <td>
+                                    <?php if ($h['start_date'] > date('Y-m-d')): ?>
+                                        <span class="badge bg-warning text-dark">Sắp tới</span>
+                                    <?php elseif ($h['end_date'] < date('Y-m-d')): ?>
+                                        <span class="badge bg-success">Hoàn thành</span>
+                                    <?php else: ?>
+                                        <span class="badge bg-primary">Đang dẫn</span>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php endif; ?>
+        </div>
+    </div>
 </div>
