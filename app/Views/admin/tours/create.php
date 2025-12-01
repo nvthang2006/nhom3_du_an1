@@ -21,6 +21,7 @@
                     <div class="card-header bg-white py-3">
                         <h6 class="m-0 font-weight-bold text-primary"><i class="bi bi-info-circle me-2"></i>Thông tin cơ bản</h6>
                     </div>
+
                     <div class="card-body">
                         <div class="mb-3">
                             <label class="form-label fw-bold">Tên Tour <span class="text-danger">*</span></label>
@@ -51,6 +52,16 @@
                             <textarea name="description" class="form-control" rows="5" placeholder="Nhập mô tả hấp dẫn về tour..."></textarea>
                             <div class="form-text">Mô tả ngắn gọn các điểm nổi bật của tour.</div>
                         </div>
+                    </div>  
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Ảnh đại diện (Thumbnail)</label>
+                        <input type="file" name="image" class="form-control" accept="image/*">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Thư viện ảnh (Gallery)</label>
+                        <input type="file" name="gallery[]" class="form-control" multiple accept="image/*">
+                        <div class="form-text">Giữ Ctrl để chọn nhiều ảnh.</div>
                     </div>
                 </div>
 

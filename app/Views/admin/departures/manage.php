@@ -10,6 +10,9 @@
         <a href="<?= BASE_URL ?>?act=admin-tours-detail&id=<?= $tour['tour_id'] ?>" class="btn btn-outline-secondary shadow-sm">
             <i class="bi bi-arrow-left me-1"></i> Quay lại
         </a>
+        <a href="<?= BASE_URL ?>?act=admin-departures-passengers&id=<?= $departure['departure_id'] ?>" class="btn btn-info text-white shadow-sm me-2">
+            <i class="bi bi-people-fill me-1"></i> Danh sách đoàn
+        </a>
     </div>
 
     <div class="row g-4">

@@ -54,6 +54,34 @@
                             <label class="form-label fw-bold">Mô tả chi tiết</label>
                             <textarea name="description" class="form-control" rows="5"><?= htmlspecialchars($tour['description']) ?></textarea>
                         </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Ảnh đại diện</label>
+                            <?php if (!empty($tour['image'])): ?>
+                                <div class="mb-2">
+                                    <img src="<?= BASE_URL . $tour['image'] ?>" class="img-thumbnail" style="height: 150px;">
+                                </div>
+                            <?php endif; ?>
+                            <input type="hidden" name="old_image" value="<?= $tour['image'] ?>">
+                            <input type="file" name="image" class="form-control" accept="image/*">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Thư viện ảnh (Thêm mới)</label>
+                            <input type="file" name="gallery[]" class="form-control" multiple accept="image/*">
+
+                            <?php if (!empty($gallery)): ?>
+                                <div class="row g-2 mt-2">
+                                    <?php foreach ($gallery as $img): ?>
+                                        <div class="col-3 col-md-2 position-relative">
+                                            <img src="<?= BASE_URL . $img['image_path'] ?>" class="img-thumbnail w-100" style="height: 80px; object-fit: cover;">
+                                            <a href="<?= BASE_URL ?>?act=admin-tours-delete-gallery&id=<?= $img['gallery_id'] ?>&tour_id=<?= $tour['tour_id'] ?>"
+                                                class="position-absolute top-0 end-0 badge bg-danger text-decoration-none"
+                                                onclick="return confirm('Xóa ảnh này?')">x</a>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
                     </div>
                 </div>
 
@@ -123,6 +151,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
 
             <div class="col-lg-4">

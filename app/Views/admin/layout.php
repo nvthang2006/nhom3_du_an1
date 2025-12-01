@@ -98,11 +98,11 @@ if (class_exists('\App\Core\Auth')) {
       height: auto;
       object-fit: contain;
       border-radius: 12px;
-      
+
       /* --- THÊM DÒNG NÀY --- */
-      mix-blend-mode: screen; 
+      mix-blend-mode: screen;
       /* --------------------- */
-      
+
       display: block;
     }
 
@@ -114,7 +114,7 @@ if (class_exists('\App\Core\Auth')) {
     /* (Tùy chọn) Hiện 1 icon nhỏ khi thu gọn nếu muốn */
 
 
-    
+
 
     .side-nav {
       margin-top: 12px;
@@ -303,7 +303,6 @@ if (class_exists('\App\Core\Auth')) {
           </a>
           <a href="#"><i class="bi bi-bar-chart"></i> Báo cáo</a>
 
-          <a href="#"><i class="bi bi-gear"></i> Cấu hình</a>
         <?php endif; ?>
 
 
@@ -314,7 +313,6 @@ if (class_exists('\App\Core\Auth')) {
             <i class="bi bi-calendar-week"></i> Lịch dẫn tour
           </a>
 
-          <a href="#"><i class="bi bi-person-badge"></i> Hồ sơ của tôi</a>
         <?php endif; ?>
 
 
@@ -324,8 +322,8 @@ if (class_exists('\App\Core\Auth')) {
       </nav>
 
       <div class="mt-auto d-none d-md-block small-muted px-2" style="margin-top:18px;">
-        Version: <strong>1.0</strong><br>
-        Du an 1 - PHP MVC
+        Nhóm: <strong>3</strong><br>
+        Du an 1
       </div>
     </aside>
 
@@ -344,23 +342,21 @@ if (class_exists('\App\Core\Auth')) {
 
         <div class="d-flex align-items-center gap-3">
           <div class="user-pill d-none d-md-flex">
-            <i class="bi bi-gear-fill text-muted"></i>
-            <div class="small-muted">Admin</div>
           </div>
           <div class="dropdown">
-            <a href="#" class="d-flex align-items-center text-decoration-none" id="userMenuBtn" data-bs-toggle="dropdown" aria-expanded="false">
+            <!-- <a href="#" class="d-flex align-items-center text-decoration-none" id="userMenuBtn" data-bs-toggle="dropdown" aria-expanded="false">
               <div style="width:36px;height:36px;border-radius:8px;background:#0ea5a4;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;margin-right:8px">
                 <?= htmlspecialchars(substr($user['full_name'] ?? ($user['email'] ?? 'A'), 0, 1)) ?>
               </div>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenuBtn">
+            </a> -->
+            <!-- <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenuBtn">
               <li class="dropdown-header"><?= htmlspecialchars($user['full_name'] ?? ($user['email'] ?? 'Admin')) ?></li>
               <li><a class="dropdown-item" href="<?= $base ?>/admin/profile">Hồ sơ</a></li>
               <li>
                 <hr class="dropdown-divider">
               </li>
               <li><a class="dropdown-item text-danger" href="<?= $base ?>/index.php/logout">Đăng xuất</a></li>
-            </ul>
+            </ul> -->
           </div>
         </div>
       </header>

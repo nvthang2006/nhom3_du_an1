@@ -5,6 +5,7 @@ namespace App\Controllers\Admin;
 use App\Core\Auth;
 use App\Models\HdvProfile;
 use App\Models\User;
+use App\Models\TourDeparture;
 
 class HdvController extends AdminBaseController
 {
@@ -21,15 +22,22 @@ class HdvController extends AdminBaseController
     {
         Auth::requireRole(['admin']);
         $userId = $_GET['id'] ?? 0;
+
         $model = new HdvProfile();
         $hdv = $model->getDetail($userId);
+
+        $depModel = new TourDeparture();
+        $history = $depModel->getHistoryByHdv($userId);
 
         if (!$hdv) {
             $_SESSION['flash'] = "Không tìm thấy HDV";
             $this->redirect('?act=admin-hdv');
         }
 
-        $this->view('admin/hdv/edit', ['hdv' => $hdv]);
+        $this->view('admin/hdv/edit', [
+            'hdv' => $hdv,
+            'history' => $history
+        ]);
     }
 
     public function update()

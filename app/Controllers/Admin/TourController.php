@@ -7,19 +7,17 @@ use App\Core\Auth;
 use App\Models\Tour;
 use App\Models\TourSchedule;
 use App\Models\Supplier;
+use App\Models\TourGallery; // Đã thêm use Model này
 
 class TourController extends AdminBaseController
 {
     public function index()
     {
-        // if (!Auth::check() || !Auth::isRole('admin')) {
-        //     header('Location: /index.php/login');
-        //     exit;
-        // }
         $m = new Tour();
         $tours = $m->all();
         $this->view('admin/tours/index', ['tours' => $tours]);
     }
+
     public function create()
     {
         if (!Auth::check() || !Auth::isRole('admin')) {
@@ -31,7 +29,6 @@ class TourController extends AdminBaseController
         $this->view('admin/tours/create', ['tours' => $tours]);
     }
 
-
     public function store()
     {
         if (!Auth::check() || !Auth::isRole('admin')) {
@@ -39,9 +36,21 @@ class TourController extends AdminBaseController
             exit;
         }
 
+        // 1. Xử lý Ảnh đại diện (Thumbnail)
+        $thumbPath = null;
+        if (!empty($_FILES['image']['name'])) {
+            $targetDir = "uploads/tours/";
+            if (!is_dir($targetDir)) mkdir($targetDir, 0777, true);
+            $fileName = time() . "_thumb_" . basename($_FILES["image"]["name"]);
+            if (move_uploaded_file($_FILES["image"]["tmp_name"], $targetDir . $fileName)) {
+                $thumbPath = $targetDir . $fileName;
+            }
+        }
+
         $m = new Tour();
         $data = [
             'tour_name'     => $_POST['tour_name'],
+            'image'         => $thumbPath, // Đã có (Đúng)
             'tour_type'     => $_POST['tour_type'],
             'description'   => $_POST['description'],
             'price'         => $_POST['price'],
@@ -54,25 +63,37 @@ class TourController extends AdminBaseController
 
         $newTourId = $m->create($data);
 
+        // 2. Xử lý Thư viện ảnh (Gallery)
+        if (!empty($_FILES['gallery']['name'][0])) {
+            $gModel = new TourGallery();
+            $targetDir = "uploads/tours/gallery/";
+            if (!is_dir($targetDir)) mkdir($targetDir, 0777, true);
+
+            foreach ($_FILES['gallery']['name'] as $key => $name) {
+                if ($_FILES['gallery']['error'][$key] === 0) {
+                    $fileName = time() . "_" . $key . "_" . basename($name);
+                    if (move_uploaded_file($_FILES['gallery']['tmp_name'][$key], $targetDir . $fileName)) {
+                        $gModel->add($newTourId, $targetDir . $fileName);
+                    }
+                }
+            }
+        }
+
+        // 3. Xử lý Lịch trình
         if (isset($_POST['schedules']) && is_array($_POST['schedules'])) {
             $schModel = new TourSchedule();
-
             foreach ($_POST['schedules'] as $index => $item) {
                 $imagePath = null;
-
                 $fileInputName = "schedules_image_" . $index;
                 if (isset($_FILES[$fileInputName]) && $_FILES[$fileInputName]['error'] === 0) {
                     $uploadDir = 'uploads/schedules/';
                     if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
-
                     $fileName = time() . '_' . basename($_FILES[$fileInputName]['name']);
                     $targetFile = $uploadDir . $fileName;
-
                     if (move_uploaded_file($_FILES[$fileInputName]['tmp_name'], $targetFile)) {
                         $imagePath = $targetFile;
                     }
                 }
-
                 $schModel->add([
                     'tour_id'     => $newTourId,
                     'day_number'  => $item['day_number'],
@@ -139,6 +160,7 @@ class TourController extends AdminBaseController
         $_SESSION['flash'] = "Đã gỡ nhà cung cấp khỏi tour.";
         $this->redirect("?act=admin-tours-detail&id=$tourId");
     }
+
     public function edit()
     {
         $id = $_GET['id'] ?? 0;
@@ -153,9 +175,13 @@ class TourController extends AdminBaseController
         $schModel = new TourSchedule();
         $schedules = $schModel->getByTourId($id);
 
+        $gModel = new TourGallery();
+        $gallery = $gModel->getByTourId($id);
+
         $this->view('admin/tours/edit', [
             'tour' => $tour,
-            'schedules' => $schedules
+            'schedules' => $schedules,
+            'gallery' => $gallery
         ]);
     }
 
@@ -169,8 +195,20 @@ class TourController extends AdminBaseController
         $tourId = $_POST['id'];
         $m = new Tour();
 
+        // 1. Xử lý Ảnh đại diện (Thumbnail)
+        $thumbPath = $_POST['old_image'] ?? null;
+        if (!empty($_FILES['image']['name'])) {
+            $targetDir = "uploads/tours/";
+            if (!is_dir($targetDir)) mkdir($targetDir, 0777, true);
+            $fileName = time() . "_thumb_" . basename($_FILES["image"]["name"]);
+            if (move_uploaded_file($_FILES["image"]["tmp_name"], $targetDir . $fileName)) {
+                $thumbPath = $targetDir . $fileName;
+            }
+        }
+
         $data = [
             'tour_name'     => $_POST['tour_name'],
+            'image'         => $thumbPath, // [ĐÃ SỬA] Thêm dòng này để khớp với Model Update
             'tour_type'     => $_POST['tour_type'],
             'description'   => $_POST['description'],
             'price'         => $_POST['price'],
@@ -182,18 +220,31 @@ class TourController extends AdminBaseController
 
         $m->update($tourId, $data);
 
-        $schModel = new TourSchedule();
+        // 2. Xử lý Thư viện ảnh (Gallery)
+        if (!empty($_FILES['gallery']['name'][0])) {
+            $gModel = new TourGallery();
+            $targetDir = "uploads/tours/gallery/";
+            if (!is_dir($targetDir)) mkdir($targetDir, 0777, true);
 
-        // Lấy danh sách lịch trình CŨ đang có trong DB
+            foreach ($_FILES['gallery']['name'] as $key => $name) {
+                if ($_FILES['gallery']['error'][$key] === 0) {
+                    $fileName = time() . "_" . $key . "_" . basename($name);
+                    if (move_uploaded_file($_FILES['gallery']['tmp_name'][$key], $targetDir . $fileName)) {
+                        $gModel->add($tourId, $targetDir . $fileName);
+                    }
+                }
+            }
+        }
+
+        // 3. Xử lý Lịch trình
+        $schModel = new TourSchedule();
         $currentDbSchedules = $schModel->getByTourId($tourId);
         $currentDbIds = array_column($currentDbSchedules, 'schedule_id');
-
         $submittedIds = [];
 
         if (isset($_POST['schedules']) && is_array($_POST['schedules'])) {
             foreach ($_POST['schedules'] as $index => $item) {
                 $scheduleId = $item['id'] ?? null;
-
                 $imagePath = $item['old_image'] ?? null;
 
                 $fileInputName = "schedules_image_" . $index;
@@ -232,6 +283,17 @@ class TourController extends AdminBaseController
 
         $this->redirect('?act=admin-tours');
     }
+
+    public function deleteGalleryImage()
+    {
+        Auth::requireRole(['admin']);
+        $id = $_GET['id'];
+        $tourId = $_GET['tour_id'];
+        (new TourGallery())->delete($id);
+        $_SESSION['flash'] = "Đã xóa ảnh.";
+        $this->redirect("?act=admin-tours-edit&id=$tourId");
+    }
+
     public function delete()
     {
         if (!Auth::check() || !Auth::isRole('admin')) {
@@ -250,9 +312,8 @@ class TourController extends AdminBaseController
 
         $tourId = $_POST['tour_id'];
         $startDate = $_POST['start_date'];
-        $duration = (int)$_POST['duration_days']; // Lấy từ hidden field hoặc query lại tour
+        $duration = (int)$_POST['duration_days'];
 
-        // Tính ngày kết thúc
         $endDate = date('Y-m-d', strtotime($startDate . " + $duration days"));
 
         $data = [
@@ -269,7 +330,6 @@ class TourController extends AdminBaseController
         $this->redirect("?act=admin-tours-detail&id=$tourId");
     }
 
-    // 3. Thêm hàm xóa lịch
     public function deleteDeparture()
     {
         Auth::requireRole(['admin']);
