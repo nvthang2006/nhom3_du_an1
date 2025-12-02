@@ -56,10 +56,9 @@ class HdvController extends AdminBaseController
             }
         }
 
-        // 2. Lưu profile (THÊM dòng lấy classification)
         $model = new HdvProfile();
         $data = [
-            'dob' => $_POST['date_of_birth'],
+            'dob' => !empty($_POST['date_of_birth']) ? $_POST['date_of_birth'] : null,
             'lang' => $_POST['languages'],
             'cert' => $_POST['certificate'],
             'exp' => $_POST['experience_years'],

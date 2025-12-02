@@ -49,8 +49,6 @@ class BookingController extends AdminBaseController
         ]);
     }
 
-    // File: app/Controllers/Admin/BookingController.php
-
     public function prepare()
     {
         Auth::requireRole(['admin']);

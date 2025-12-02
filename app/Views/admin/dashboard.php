@@ -1,7 +1,4 @@
 <?php
-// app/Views/admin/dashboard.php
-// Variables expected: $stats (array), $recentBookings (array), $upcomingTours (array), optional $logs (array)
-
 $pageTitle = 'Bảng điều khiển';
 $pageSubtitle = 'Tổng quan tình hình tour, booking và doanh thu';
 // Format tiền tệ cho gọn
@@ -9,7 +6,7 @@ $revenue = isset($stats['month_revenue']) ? number_format($stats['month_revenue'
 ?>
 
 <div class="container-fluid p-4">
-    
+
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h1 class="h3 mb-1 text-gray-800">Tổng quan</h1>
@@ -98,7 +95,7 @@ $revenue = isset($stats['month_revenue']) ? number_format($stats['month_revenue'
 
     <div class="row g-4">
         <div class="col-lg-8">
-            
+
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
                     <h5 class="card-title mb-0 fw-bold text-gray-800"><i class="bi bi-receipt me-2 text-primary"></i>Booking gần đây</h5>
@@ -118,36 +115,36 @@ $revenue = isset($stats['month_revenue']) ? number_format($stats['month_revenue'
                             </thead>
                             <tbody>
                                 <?php if (!empty($recentBookings)): ?>
-                                    <?php foreach ($recentBookings as $b): 
+                                    <?php foreach ($recentBookings as $b):
                                         $status = $b['status'] ?? 'Chờ';
                                         // Logic màu badge
-                                        $badgeClass = match($status) {
+                                        $badgeClass = match ($status) {
                                             'Hoàn tất', 'Completed' => 'bg-success-subtle text-success border-success-subtle',
                                             'Đã cọc', 'Paid' => 'bg-primary-subtle text-primary border-primary-subtle',
                                             'Hủy', 'Cancelled' => 'bg-danger-subtle text-danger border-danger-subtle',
                                             default => 'bg-secondary-subtle text-secondary border-secondary-subtle'
                                         };
                                     ?>
-                                    <tr>
-                                        <td class="ps-4 fw-bold text-primary">#<?= $b['booking_id'] ?></td>
-                                        <td>
-                                            <div class="fw-semibold text-dark"><?= htmlspecialchars($b['contact_name'] ?? 'Khách lẻ') ?></div>
-                                            <div class="small text-muted"><?= htmlspecialchars($b['phone'] ?? '') ?></div>
-                                        </td>
-                                        <td>
-                                            <div class="text-truncate" style="max-width: 200px;" title="<?= htmlspecialchars($b['tour_name'] ?? '') ?>">
-                                                <?= htmlspecialchars($b['tour_name'] ?? '-') ?>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <span class="badge rounded-pill border <?= $badgeClass ?> px-3 py-1">
-                                                <?= $status ?>
-                                            </span>
-                                        </td>
-                                        <td class="text-end pe-4">
-                                            <a href="#" class="btn btn-sm btn-light text-muted"><i class="bi bi-three-dots-vertical"></i></a>
-                                        </td>
-                                    </tr>
+                                        <tr>
+                                            <td class="ps-4 fw-bold text-primary">#<?= $b['booking_id'] ?></td>
+                                            <td>
+                                                <div class="fw-semibold text-dark"><?= htmlspecialchars($b['contact_name'] ?? 'Khách lẻ') ?></div>
+                                                <div class="small text-muted"><?= htmlspecialchars($b['phone'] ?? '') ?></div>
+                                            </td>
+                                            <td>
+                                                <div class="text-truncate" style="max-width: 200px;" title="<?= htmlspecialchars($b['tour_name'] ?? '') ?>">
+                                                    <?= htmlspecialchars($b['tour_name'] ?? '-') ?>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="badge rounded-pill border <?= $badgeClass ?> px-3 py-1">
+                                                    <?= $status ?>
+                                                </span>
+                                            </td>
+                                            <td class="text-end pe-4">
+                                                <a href="#" class="btn btn-sm btn-light text-muted"><i class="bi bi-three-dots-vertical"></i></a>
+                                            </td>
+                                        </tr>
                                     <?php endforeach; ?>
                                 <?php else: ?>
                                     <tr>
@@ -180,7 +177,7 @@ $revenue = isset($stats['month_revenue']) ? number_format($stats['month_revenue'
         </div>
 
         <div class="col-lg-4">
-            
+
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-header bg-white border-0 py-3">
                     <h5 class="card-title mb-0 fw-bold text-gray-800"><i class="bi bi-calendar-week me-2 text-warning"></i>Sắp khởi hành</h5>

@@ -1,59 +1,167 @@
-<section style="max-width:420px;margin:40px auto;background:#fff;padding:20px;border-radius:12px;box-shadow:0 6px 20px rgba(15,23,42,.08)">
-    <h1 style="margin-top:0;margin-bottom:12px">Đăng ký tài khoản</h1>
-    <p style="margin-top:0;color:#6b7280">Tạo tài khoản mới để sử dụng hệ thống.</p>
+<!DOCTYPE html>
+<html lang="vi">
 
-    <?php if (!empty($error)): ?>
-        <div style="color:#b91c1c;margin-bottom:12px;font-weight:700;">
-            <?= htmlspecialchars($error) ?>
-        </div>
-    <?php endif; ?>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <?php if (!empty($success)): ?>
-        <div style="color:#15803d;margin-bottom:12px;font-weight:700;">
-            <?= htmlspecialchars($success) ?>
-        </div>
-    <?php endif; ?>
+    <title>Đăng ký tài khoản</title>
 
-    <form action="<?= BASE_URL ?>index.php?act=register-post" method="POST">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-        <div style="margin-bottom:10px">
-            <label for="full_name">Họ và tên</label><br>
-            <input type="text" id="full_name" name="full_name" required
-                style="width:100%;padding:8px;border:1px solid #e5e7eb;border-radius:8px">
-        </div>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
-        <div style="margin-bottom:10px">
-            <label for="email">Email</label><br>
-            <input type="email" id="email" name="email" required
-                style="width:100%;padding:8px;border:1px solid #e5e7eb;border-radius:8px">
-        </div>
+    <style>
+        body {
+            /* Giữ nguyên background giống trang Login */
+            background: url("https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1d/b9/99/5c/moraine-lake-photo-taken.jpg?w=1400&h=800&s=1") no-repeat center center;
+            background-size: cover;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', sans-serif;
+            color: #fff;
+        }
 
-        <div style="margin-bottom:10px">
-            <label for="phone">Số điện thoại</label><br>
-            <input type="text" id="phone" name="phone"
-                style="width:100%;padding:8px;border:1px solid #e5e7eb;border-radius:8px">
-        </div>
+        .login-card {
+            width: 450px;
+            /* Tăng nhẹ chiều rộng vì form dài hơn */
+            background: #13151c;
+            padding: 40px;
+            border-radius: 22px;
+            box-shadow: 0 0 35px rgba(0, 0, 0, 0.55);
+            animation: fadeIn .5s ease;
+            margin: 20px;
+            /* Để tránh sát lề trên mobile */
+        }
 
-        <div style="margin-bottom:10px">
-            <label for="password">Mật khẩu</label><br>
-            <input type="password" id="password" name="password" required
-                style="width:100%;padding:8px;border:1px solid #e5e7eb;border-radius:8px">
-        </div>
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
 
-        <div style="margin-bottom:10px">
-            <label for="password_confirmation">Nhập lại mật khẩu</label><br>
-            <input type="password" id="password_confirmation" name="password_confirmation" required
-                style="width:100%;padding:8px;border:1px solid #e5e7eb;border-radius:8px">
-        </div>
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-        <button type="submit"
-            style="width:100%;padding:10px;border:0;border-radius:8px;background:#0f766e;color:#fff;font-weight:700">
-            Đăng ký
-        </button>
-    </form>
+        .form-control {
+            background: #1b1e27;
+            border: 1px solid #2b2f3b;
+            color: #fff;
+            height: 48px;
+            border-radius: 12px;
+            padding-left: 40px;
+        }
 
-    <p style="margin-top:12px;text-align:center;color:#6b7280">
-        Đã có tài khoản?
-        <a href="<?= BASE_URL ?>index.php?act=login" style="font-weight:700">Đăng nhập</a>
-    </p>
-</section>
+        .form-control:focus {
+            background: #171a23;
+            border-color: #00ffc6;
+            box-shadow: 0 0 10px rgba(0, 255, 198, 0.6);
+            color: #fff;
+        }
+
+        .input-icon {
+            position: absolute;
+            top: 50%;
+            left: 12px;
+            transform: translateY(-50%);
+            color: #00ffc6;
+        }
+
+        .btn-gradient {
+            background: linear-gradient(90deg, #00ffc6, #007aff);
+            border: none;
+            height: 48px;
+            border-radius: 10px;
+            color: #000;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            width: 100%;
+        }
+
+        .btn-gradient:hover {
+            opacity: .9;
+        }
+
+        a {
+            color: #42aaff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Chỉnh màu placeholder cho dễ nhìn trên nền tối */
+        ::placeholder {
+            color: #6c757d !important;
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+
+    <section class="login-card">
+
+        <h1 class="fw-bold text-center mb-1">Sign Up</h1>
+        <div class="text-center mb-4" style="color:#8890a2">Create your new account</div>
+
+        <?php if (!empty($error)) : ?>
+            <div class="alert alert-danger py-2 mb-3 fw-bold border-0 bg-danger-subtle text-danger">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i><?= htmlspecialchars($error) ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if (!empty($success)) : ?>
+            <div class="alert alert-success py-2 mb-3 fw-bold border-0 bg-success-subtle text-success">
+                <i class="bi bi-check-circle-fill me-2"></i><?= htmlspecialchars($success) ?>
+            </div>
+        <?php endif; ?>
+
+        <form action="<?= BASE_URL ?>?act=register-post" method="POST">
+
+            <div class="mb-3 position-relative">
+                <i class="bi bi-person input-icon"></i>
+                <input type="text" name="full_name" class="form-control" placeholder="Full Name" required>
+            </div>
+
+            <div class="mb-3 position-relative">
+                <i class="bi bi-envelope input-icon"></i>
+                <input type="email" name="email" class="form-control" placeholder="Email Address" required>
+            </div>
+
+            <div class="mb-3 position-relative">
+                <i class="bi bi-telephone input-icon"></i>
+                <input type="text" name="phone" class="form-control" placeholder="Phone Number">
+            </div>
+
+            <div class="mb-3 position-relative">
+                <i class="bi bi-lock input-icon"></i>
+                <input type="password" name="password" class="form-control" placeholder="Password" required>
+            </div>
+
+            <div class="mb-4 position-relative">
+                <i class="bi bi-shield-lock input-icon"></i>
+                <input type="password" name="password_confirmation" class="form-control" placeholder="Confirm Password" required>
+            </div>
+
+            <button type="submit" class="btn-gradient mt-1 mb-3">
+                REGISTER
+            </button>
+
+            <p class="text-center mt-2" style="color:#9da1b5;">
+                Already have an account?
+                <a href="<?= BASE_URL ?>?act=login">Sign In</a>
+            </p>
+        </form>
+
+    </section>
+
+</body>
+
+</html>
