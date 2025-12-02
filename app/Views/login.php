@@ -15,7 +15,7 @@
 
   <style>
     body {
-      background: url("https://pantravel.vn/wp-content/uploads/2023/11/ho-moraine-vien-ngoc-xanh-cua-canada.jpg") no-repeat center center;
+      background: url("https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1d/b9/99/5c/moraine-lake-photo-taken.jpg?w=1400&h=800&s=1") no-repeat center center;
       background-size: cover;
       min-height: 100vh;
       display: flex;
@@ -158,15 +158,7 @@
 
       <div class="divider text-center">OR</div>
 
-      <!-- Google button -->
-      <button type="button" class="social-btn d-flex align-items-center justify-content-center gap-2 mb-2">
-        <i class="bi bi-google"></i> Continue with Google
-      </button>
-
-      <!-- Apple button -->
-      <button type="button" class="social-btn d-flex align-items-center justify-content-center gap-2 mb-3">
-        <i class="bi bi-apple"></i> Continue with Apple
-      </button>
+      
 
       <p class="text-center mt-2" style="color:#9da1b5;">
         New here?

@@ -1,12 +1,5 @@
 <?php
-// app/Views/layout.php
-if (session_status() === PHP_SESSION_NONE) session_start();
-$user = null;
-if (class_exists('\App\Core\Auth')) {
-    $user = \App\Core\Auth::user();
-}
-
-
+$user = \App\Core\Auth::user();
 ?>
 <!doctype html>
 <html lang="vi">
@@ -284,7 +277,6 @@ if (class_exists('\App\Core\Auth')) {
             }
         }
 
-        /* small helpers for admin links */
         .admin-badge {
             background: #fde68a;
             padding: 4px 8px;
@@ -297,49 +289,9 @@ if (class_exists('\App\Core\Auth')) {
 </head>
 
 <body>
-    <!-- <header class="site-header">
-        <div class="container header-inner">
-            <a href="<?= $base ?>/" class="brand" style="text-decoration: none;">
-                <div class="logo">TM</div>
-                <div>
-                    <div style="font-weight:800">TourManager</div>
-                    <div style="font-size:13px;color:var(--muted)">Khám phá. Đặt. Trải nghiệm.</div>
-                </div>
-            </a>
-
-
-            <nav class="main-nav" aria-label="Chính">
-                <a href="<?= BASE_URL ?>?act=/">Trang chủ</a>
-                <a href="<?= BASE_URL ?>?act=tours">Tours</a>
-                <a href="<?= BASE_URL ?>?act=tours&type=domestic">Trong nước</a>
-                <a href="<?= BASE_URL ?>?act=tours&type=international">Quốc tế</a>
-                <a href="<?= BASE_URL ?>?act=/#contact">Liên hệ</a>
-                <?php if ($user && isset($user['role']) && $user['role'] === 'admin'): ?>
-                    <span class="admin-badge" title="Admin">ADMIN</span>
-                <?php endif; ?>
-            </nav>
-
-            <div style="display:flex;gap:10px;align-items:center">
-                <?php if ($user): ?>
-                    <?php if ($user['role'] === 'admin'): ?>
-                        <a href="<?= BASE_URL ?>?act=admin-dashboard" class="cta">Quản trị</a>
-                    <?php elseif ($user['role'] === 'hdv'): ?>
-                        <a href="<?= $base ?>/hdv" class="cta">HDV</a>
-                    <?php endif; ?>
-                    <a href="<?= BASE_URL ?>?act=logout" style="text-decoration:none;color:var(--muted)"><?= htmlspecialchars($user['full_name'] ?? $user['email']) ?> — Đăng xuất</a>
-                <?php else: ?>
-                    <a href="<?= BASE_URL ?>?act=login" class="cta">Đăng nhập</a>
-                <?php endif; ?>
-
-                <button class="mobile-toggle" aria-label="Mở menu">☰</button>
-            </div>
-        </div>
-    </header> -->
-
     <main class="container">
 
         <?php
-        // CHỖ QUAN TRỌNG: nhét view con vào
         if (isset($viewFile) && file_exists($viewFile)) {
             include $viewFile;
         } else {

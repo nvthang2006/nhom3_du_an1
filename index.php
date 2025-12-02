@@ -8,29 +8,9 @@ require_once './app/Core/Database.php';
 require_once './app/Core/Router.php';
 require_once './app/Core/Auth.php';
 
-// Require tất cả Controllers
-require_once './app/Controllers/HomeController.php';
-require_once './app/Controllers/AuthController.php';
-require_once './app/Controllers/Admin/DashboardController.php';
-require_once './app/Controllers/Admin/TourController.php';
-require_once './app/Controllers/Admin/BookingController.php';
-require_once './app/Controllers/Hdv/DashboardController.php';
-require_once './app/Controllers/Hdv/CheckinController.php';
-
-// Require Models nếu cần
-require_once './app/Models/BaseModel.php';
-require_once './app/Models/CheckinRecord.php';
-require_once './app/Models/Tour.php';
-require_once './app/Models/User.php';
-require_once './app/Models/TourSchedule.php';
-
-// Lấy act từ query string
 $act = $_GET['act'] ?? '/';
 
-// Định tuyến bằng match
 match ($act) {
-    // Public
-    // Khi nhập '/', tự chuyển đến login
     '/' => header("Location: ?act=login"),
     // 'tours' => (new App\Controllers\HomeController())->tours(),
     // 'tours-show' => (new App\Controllers\HomeController())->show(), // ?id=
