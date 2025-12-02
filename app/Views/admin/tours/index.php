@@ -81,7 +81,7 @@
                                 <th style="width:130px;">Giá</th>
                                 <th style="width:150px;">Trạng thái</th>
                                 <th style="width:110px;">Ngày tạo</th>
-                                <th style="width:140px;" class="text-end pe-4">Thao tác</th>
+                                <th style="width:180px;" class="text-end pe-4">Thao tác</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -150,6 +150,11 @@
                                                 <i class="bi bi-pencil-square"></i>
                                             </a>
 
+                                            <a href="<?= BASE_URL ?>?act=admin-reports-expense&tour_id=<?= $id ?>"
+                                                class="btn btn-sm btn-light text-success"
+                                                title="Quản lý chi phí" data-bs-toggle="tooltip">
+                                                <i class="bi bi-cash-coin"></i>
+                                            </a>
                                             <button type="button"
                                                 class="btn btn-sm btn-light text-danger"
                                                 data-bs-toggle="modal"
