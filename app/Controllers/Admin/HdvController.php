@@ -18,6 +18,79 @@ class HdvController extends AdminBaseController
         $this->view('admin/hdv/index', ['hdvs' => $hdvs]);
     }
 
+    // --- THÊM MỚI TỪ ĐÂY ---
+
+    public function create()
+    {
+        Auth::requireRole(['admin']);
+        $this->view('admin/hdv/create');
+    }
+
+    public function store()
+    {
+        Auth::requireRole(['admin']);
+
+        $fullName = $_POST['full_name'];
+        $email    = $_POST['email'];
+        $password = $_POST['password'];
+        $phone    = $_POST['phone'];
+        
+        // 1. Kiểm tra Email đã tồn tại chưa
+        $userModel = new User();
+        if ($userModel->findByEmail($email)) {
+            $_SESSION['error'] = "Email '$email' đã tồn tại trong hệ thống!";
+            return $this->redirect('?act=admin-hdv-create');
+        }
+
+        // 2. Tạo tài khoản User (Role = hdv)
+        // Hash mật khẩu
+        $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+        
+        try {
+            $newUserId = $userModel->create([
+                'full_name' => $fullName,
+                'email'     => $email,
+                'password'  => $hashedPassword,
+                'phone'     => $phone,
+                'role'      => 'hdv',    // Quan trọng: Phân quyền HDV
+                'status'    => '1'
+            ]);
+
+            // 3. Upload Avatar (nếu có)
+            $avatarPath = null;
+            if (!empty($_FILES['avatar']['name'])) {
+                $targetDir = "uploads/avatars/";
+                if (!is_dir($targetDir)) mkdir($targetDir, 0777, true);
+                $fileName = time() . "_" . basename($_FILES["avatar"]["name"]);
+                if (move_uploaded_file($_FILES["avatar"]["tmp_name"], $targetDir . $fileName)) {
+                    $avatarPath = $targetDir . $fileName;
+                }
+            }
+
+            // 4. Tạo Hồ sơ HDV (HdvProfile)
+            $profileModel = new HdvProfile();
+            $profileData = [
+                'dob'    => $_POST['date_of_birth'] ?? null,
+                'lang'   => $_POST['languages'] ?? '',
+                'cert'   => $_POST['certificate'] ?? '',
+                'exp'    => $_POST['experience_years'] ?? 0,
+                'health' => $_POST['health_status'] ?? 'Tốt',
+                'class'  => $_POST['classification'] ?? 'Nội địa',
+                'avt'    => $avatarPath
+            ];
+
+            // Hàm saveProfile của bạn đã viết xử lý cả INSERT nếu chưa có
+            $profileModel->saveProfile($newUserId, $profileData);
+
+            $_SESSION['flash'] = "Thêm mới HDV thành công! Tài khoản đã sẵn sàng.";
+            $this->redirect('?act=admin-hdv');
+
+        } catch (\Exception $e) {
+            $_SESSION['error'] = "Lỗi hệ thống: " . $e->getMessage();
+            $this->redirect('?act=admin-hdv-create');
+        }
+    }
+
     public function edit()
     {
         Auth::requireRole(['admin']);

@@ -12,7 +12,7 @@
             <div class="col-md-4">
                 <div class="card mb-3">
                     <div class="card-body text-center">
-                        <img src="<?= !empty($hdv['avatar']) ? BASE_URL . $hdv['avatar'] : 'https://sf-static.upanhlaylink.com/img/image_202511277a136b95cd3247b106f567482db76471.jpg' ?>" class="img-thumbnail mb-3" style="width:150px;height:150px;object-fit:cover">
+                        <img src="<?= !empty($hdv['avatar']) ? BASE_URL . $hdv['avatar'] : 'https://velle.vn/wp-content/uploads/2025/04/avatar-mac-dinh-4-2.jpg' ?>" class="img-thumbnail mb-3" style="width:150px;height:150px;object-fit:cover">
                         <input type="file" name="avatar" class="form-control mb-2">
                         <div class="fw-bold"><?= $hdv['email'] ?></div>
                         <div><?= $hdv['phone'] ?></div>

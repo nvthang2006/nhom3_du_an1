@@ -301,7 +301,9 @@ if (class_exists('\App\Core\Auth')) {
           <a href="<?= BASE_URL ?>?act=admin-suppliers" class="<?= (strpos($_SERVER['REQUEST_URI'], 'admin-suppliers') !== false) ? 'active' : '' ?>">
             <i class="bi bi-building"></i> Đối tác & NCC
           </a>
-          <a href="#"><i class="bi bi-bar-chart"></i> Báo cáo</a>
+          <a href="<?= BASE_URL ?>?act=admin-reports" class="<?= (strpos($_SERVER['REQUEST_URI'], 'admin-reports') !== false) ? 'active' : '' ?>">
+            <i class="bi bi-bar-chart-line-fill"></i> Báo cáo Tài chính
+          </a>
 
         <?php endif; ?>
 

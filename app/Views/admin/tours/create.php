@@ -25,7 +25,7 @@
                     <div class="card-body">
                         <div class="mb-3">
                             <label class="form-label fw-bold">Tên Tour <span class="text-danger">*</span></label>
-                            <input type="text" name="tour_name" required class="form-control form-control-lg" placeholder="Ví dụ: Tour Hà Nội - Sapa 3 ngày 2 đêm">
+                            <input type="text" name="tour_name" required class="form-control form-control-lg" placeholder="Ví dụ: Tour Hà Nội - Sapa ">
                         </div>
 
                         <div class="row">

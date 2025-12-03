@@ -44,6 +44,14 @@ match ($act) {
     'admin-departures-print' => (new App\Controllers\Admin\DepartureController())->printPassengers(),
     'admin-tours-delete-gallery' => (new App\Controllers\Admin\TourController())->deleteGalleryImage(),
 
+    // --- Báo cáo & Tài chính ---
+    'admin-reports'         => (new App\Controllers\Admin\ReportController())->index(),
+    'admin-reports-expense' => (new App\Controllers\Admin\ReportController())->expense(), // Quản lý chi phí 1 tour
+    'admin-reports-store'   => (new App\Controllers\Admin\ReportController())->storeExpense(), // Lưu chi phí
+    'admin-reports-delete'  => (new App\Controllers\Admin\ReportController())->deleteExpense(), // Xóa chi phí
+
+    // ...
+
     // HDV
     'hdv-dashboard' => (new App\Controllers\Hdv\DashboardController())->index(),
     'hdv-checkin' => (new App\Controllers\Hdv\CheckinController())->list(),
@@ -58,6 +66,8 @@ match ($act) {
 
     // --- Quản lý HDV ---
     'admin-hdv' => (new App\Controllers\Admin\HdvController())->index(),
+    'admin-hdv-create' => (new App\Controllers\Admin\HdvController())->create(), // <--- MỚI
+    'admin-hdv-store' => (new App\Controllers\Admin\HdvController())->store(),   // <--- MỚI
     'admin-hdv-edit' => (new App\Controllers\Admin\HdvController())->edit(),
     'admin-hdv-update' => (new App\Controllers\Admin\HdvController())->update(),
     // --- Quản lý Nhà cung cấp ---
