@@ -52,6 +52,8 @@ match ($act) {
 
     // --- Quản lý HDV ---
     'admin-hdv' => (new App\Controllers\Admin\HdvController())->index(),
+    'admin-hdv-create' => (new App\Controllers\Admin\HdvController())->create(), // <--- MỚI
+    'admin-hdv-store' => (new App\Controllers\Admin\HdvController())->store(),   // <--- MỚI
     'admin-hdv-edit' => (new App\Controllers\Admin\HdvController())->edit(),
     'admin-hdv-update' => (new App\Controllers\Admin\HdvController())->update(),
     // --- Quản lý Nhà cung cấp ---
