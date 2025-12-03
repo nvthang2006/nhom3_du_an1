@@ -16,7 +16,7 @@ class DashboardController extends AdminBaseController
 
         $hdvId = Auth::user()['user_id'];
         $mAssign = new TourAssignment();
-        $schedules = method_exists($mAssign, 'getScheduleByHdv') ? $mAssign->getScheduleByHdv($hdvId) : [];
+        $schedules = $mAssign->getScheduleByHdv($hdvId);
 
         $this->view('hdv/dashboard', [
             'pageTitle'    => 'Dashboard HDV',       

@@ -33,7 +33,7 @@ class CustomerInBooking extends BaseModel
                 WHERE b.departure_id = :did 
                 AND b.status != 'Hủy'
                 ORDER BY c.full_name ASC";
-        
+
         return $this->fetchAll($sql, ['did' => $departureId]);
     }
 
@@ -41,5 +41,16 @@ class CustomerInBooking extends BaseModel
     {
         $sql = "UPDATE {$this->table} SET note = :note WHERE customer_id = :id";
         return $this->execute($sql, ['note' => $note, 'id' => $customerId]);
+    }
+    public function updateCheckin($customerId, $status)
+    {
+        $sql = "UPDATE {$this->table} SET check_in = :s WHERE customer_id = :id";
+        $this->execute($sql, ['s' => $status, 'id' => $customerId]);
+    }
+
+    public function updateNote($customerId, $note)
+    {
+        $sql = "UPDATE {$this->table} SET note = :n WHERE customer_id = :id";
+        $this->execute($sql, ['n' => $note, 'id' => $customerId]);
     }
 }

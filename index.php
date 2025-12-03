@@ -48,6 +48,12 @@ match ($act) {
     'hdv-dashboard' => (new App\Controllers\Hdv\DashboardController())->index(),
     'hdv-checkin' => (new App\Controllers\Hdv\CheckinController())->list(),
     'hdv-checkin-create' => (new App\Controllers\Hdv\CheckinController())->create(),
+    // --- HDV Routes (Thêm mới) ---
+
+    // Chi tiết tour & Check-in & Nhật ký
+    'hdv-tour-detail' => (new App\Controllers\Hdv\TourDetailController())->index(),
+    'hdv-log-store' => (new App\Controllers\Hdv\TourDetailController())->storeLog(),
+    'hdv-customer-update' => (new App\Controllers\Hdv\TourDetailController())->updateCustomer(),
 
 
     // --- Quản lý HDV ---
@@ -69,6 +75,8 @@ match ($act) {
     'admin-departures-update-op' => (new App\Controllers\Admin\DepartureController())->updateOperational(),
     'admin-departures-add-service' => (new App\Controllers\Admin\DepartureController())->addService(),
     'admin-departures-delete-service' => (new App\Controllers\Admin\DepartureController())->deleteService(),
+
+
 
     default => http_response_code(404) && print("404 Not Found"),
 };
