@@ -9,21 +9,68 @@ use App\Models\CustomerInBooking;
 
 class BookingController extends AdminBaseController
 {
+    // File: DA1/app/Controllers/Admin/BookingController.php
+
     public function index()
     {
         if (!Auth::check() || !Auth::isRole('admin')) {
             header('Location: /index.php/login');
             exit;
         }
+
         $db = Database::getConnection();
+
+        // 1. Lấy tham số từ URL
+        $search = $_GET['q'] ?? null;
+        $status = $_GET['status'] ?? null;
+        $date   = $_GET['date'] ?? null;
+
+        // 2. Chuẩn bị câu SQL cơ bản
         $sql = "SELECT b.*, t.tour_name, 
-                (SELECT phone FROM customers_in_booking WHERE booking_id = b.booking_id LIMIT 1) as contact_phone
-                FROM bookings b 
-                JOIN tours t ON b.tour_id = t.tour_id 
-                ORDER BY b.created_at DESC";
-        $rows = $db->query($sql)->fetchAll();
+            (SELECT phone FROM customers_in_booking WHERE booking_id = b.booking_id LIMIT 1) as contact_phone
+            FROM bookings b 
+            JOIN tours t ON b.tour_id = t.tour_id 
+            WHERE 1=1"; // Kỹ thuật 1=1 giúp nối chuỗi AND dễ dàng
+
+        $params = [];
+
+        // 3. Xử lý logic lọc
+        // Lọc theo Từ khóa (Mã vé, Tên tour, SĐT)
+        if (!empty($search)) {
+            $sql .= " AND (
+            b.booking_id LIKE :search 
+            OR t.tour_name LIKE :search
+            OR EXISTS (
+                SELECT 1 FROM customers_in_booking c 
+                WHERE c.booking_id = b.booking_id 
+                AND c.phone LIKE :search
+            )
+        )";
+            $params['search'] = "%$search%";
+        }
+
+        // Lọc theo Trạng thái
+        if (!empty($status)) {
+            $sql .= " AND b.status = :status";
+            $params['status'] = $status;
+        }
+
+        // Lọc theo Ngày khởi hành (start_date)
+        if (!empty($date)) {
+            $sql .= " AND b.start_date = :date";
+            $params['date'] = $date;
+        }
+
+        // 4. Sắp xếp và Thực thi
+        $sql .= " ORDER BY b.created_at DESC";
+
+        $stmt = $db->prepare($sql);
+        $stmt->execute($params);
+        $rows = $stmt->fetchAll();
+
         $this->view('admin/bookings/index', ['bookings' => $rows]);
     }
+    
     public function create()
     {
         Auth::requireRole(['admin']);
